@@ -79,6 +79,7 @@ class PersonaController extends Controller
                             return response()->json(["correo"=>$persona->correo, 
                             "external_id"=>$persona->external_id,
                             "nombre"=>$persona->nombre,
+                            "clave"=>$persona->clave,
                             "rol"=>$persona->rol,
                             "nivel"=>$nivel_user->nivel,
                             "experiencia"=>$nivel_user->experiencia,
@@ -90,6 +91,7 @@ class PersonaController extends Controller
                             return response()->json(["correo"=>$persona->correo, 
                             "external_id"=>$persona->external_id,
                             "nombre"=>$persona->nombre,
+                            "clave"=>$persona->clave,
                             "rol"=>$persona->rol,
                             "token"=> base64_encode($persona->external_id.'--'.$persona->correo), 
                             "mensaje"=>"Operacion existosa", "siglas"=>"OE"], 200);
