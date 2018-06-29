@@ -29,3 +29,8 @@ $router->post('/usuario/actualizarinfo/{external_id}', 'PreguntaController@Actua
 #preguntaController
 
 $router->post('/usuario/registroPregunta', 'PreguntaController@Registrar');
+
+
+#categoriaController
+
+$router->post('/usuario/registroCategoria', 'CategoriaController@Registrar');
