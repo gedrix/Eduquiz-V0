@@ -36,4 +36,29 @@ class CategoriaController extends Controller
 			return response()->json(["mensaje"=>"La data no tiene el formato deseado", "siglas"=>"DNF"], 400);
 		}
 	}
+
+	public function EditarCategoria(Request $request, $external_id)
+	{
+		$categoriaObj = Categoria::where("external_id", $external_id)->first();
+		if ($categoriaObj) {
+
+			if ($request->json()) {
+				
+				$data = $request->json()->all();
+                
+                $categoriaObj->nombre = $data["nombre"];
+                $categoriaObj->save();
+	            return response()->json(["mensaje"=>"Operacion existosa", "siglas"=>"OE"], 200);
+				
+				
+
+			}else{
+                return response()->json(["mensaje"=>"La data no tiene el formato deseado", "siglas"=>"DNF"], 400);
+            }
+
+		}else{
+            return response()->json(["mensaje"=>"No se ha encontrado ningun dato", "siglas"=>"NDE"], 203);
+        }
+
+	}
 }
