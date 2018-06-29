@@ -34,3 +34,4 @@ $router->post('/usuario/registroPregunta', 'PreguntaController@Registrar');
 #categoriaController
 
 $router->post('/usuario/registroCategoria', 'CategoriaController@Registrar');
+$router->post('/usuario/editarCategoria/{external_id}', 'CategoriaController@EditarCategoria');
