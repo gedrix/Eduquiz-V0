@@ -24,5 +24,8 @@ $router->get('/test/admin', 'Testing@test');
 $router->post('/usuario/editar/{external_id}', 'PersonaController@Modificar');
 $router->post('/login', 'PersonaController@Login');
 $router->post('/usuario/registro', 'PersonaController@Registrar');
-$router->post('/usuario/actualizarinfo/{external_id}', 'PersonaController@ActualizarNivelUsuario');
-$router->post('/usuario/registro/registritoPrueba', 'PersonaController@Registrar');
+$router->post('/usuario/actualizarinfo/{external_id}', 'PreguntaController@ActualizarNivelUsuario');
+
+#preguntaController
+
+$router->post('/usuario/registroPregunta', 'PreguntaController@Registrar');
