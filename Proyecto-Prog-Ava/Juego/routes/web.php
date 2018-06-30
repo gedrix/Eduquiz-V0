@@ -20,18 +20,16 @@ $router->get('/key', function () use ($router) {
 
 //Test
 $router->get('/test/admin', 'Testing@test');
+
 //Persona e info del juego del Usuario
 $router->post('/usuario/editar/{external_id}', 'PersonaController@Modificar');
 $router->post('/login', 'PersonaController@Login');
 $router->post('/usuario/registro', 'PersonaController@Registrar');
-$router->post('/usuario/actualizarinfo/{external_id}', 'PreguntaController@ActualizarNivelUsuario');
+$router->post('/usuario/actualizarinfo/{external_id}', 'PersonaController@ActualizarNivelUsuario');
 
-#preguntaController
+//preguntas
+$router->post('/preguntas/ramdon', 'PreguntaController@obtenerPreguntaRamdon');
 
-$router->post('/usuario/registroPregunta', 'PreguntaController@Registrar');
-
-
-#categoriaController
-
+//categoriaController
 $router->post('/usuario/registroCategoria', 'CategoriaController@Registrar');
 $router->post('/usuario/editarCategoria/{external_id}', 'CategoriaController@EditarCategoria');
