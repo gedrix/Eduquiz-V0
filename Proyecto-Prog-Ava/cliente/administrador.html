@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>EduQuiz</title>
+  <title>Admin</title>
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <meta content="" name="keywords">
   <meta content="" name="description">
@@ -21,6 +21,10 @@
   <meta name="twitter:title" content="">
   <meta name="twitter:description" content="">
   <meta name="twitter:image" content="">
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 
   <!-- Favicon -->
   <link href="img/favicon.ico" rel="icon">
@@ -85,11 +89,10 @@
 
       <nav id="nav-menu-container">
         <ul class="nav-menu">
-          <li><a href="#about">Sobre Nosotros</a></li>
-          <li><a href="#features">Caracteristicas</a></li>
-          <li><a href="#portfolio">Protafolio</a></li>
-          <li><a href="#team">Equipo</a></li>
-         <li><a href="#contact">Contactanos</a></li>
+          <li><a href="#preguntas">Preguntas</a></li>
+          <li><a href="#features">Categorias</a></li>
+          <li><a href="#portfolio">Revisión Preguntas</a></li>
+            <li><a href="#team">Usuarios</a></li>
         </ul>
       </nav>
       <!-- #nav-menu-container -->
@@ -134,42 +137,73 @@
 
   <!-- About -->
 
-  <section class="about" id="about">
+  <section class="about" id="preguntas">
     <div class="container text-center">
       <h2>
-          Todo sobre EduQuiz
-        </h2>
-
-      <p>
-        Voluptua scripserit per ad, laudem viderer sit ex. Ex alia corrumpit voluptatibus usu, sed unum convenire id. Ut cum nisl moderatius, per nihil dicant commodo an. Eum tacimates erroribus ad. Atqui feugiat euripidis ea pri, sed veniam tacimates ex. Menandri
-        temporibus an duo.
-      </p>
-
-      <div class="row stats-row">
-        <div class="stats-col text-center col-md-3 col-sm-6">
-          <div class="circle">
-            <span class="stats-no" data-toggle="counter-up">232</span> Jugadores Activos
-          </div>
+          ADMINISTRACIÓN DE LAS PREGUNTAS
+       </h2>
+        <div class="row">
+            <div class="col-sm-4">
+               <h3>Agregar Pregunta</h3>
+                <table>
+                    <tr>
+                        <td>Pregunta: </td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Nivel: </td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <!-- <td><br>Categorias<br><input type="radio">Cate1<br><input type="radio">Cate2<br>
+                        <input type="radio">Cate1<br><input type="radio">Cate2<br><br></td>
+                        <td><br><br><input type="radio">Cate1<br><input type="radio">Cate2<br>
+                        <input type="radio">Cate1<br><input type="radio">Cate2<br><br></td> -->
+                        <td>Categorias: </td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><span class="btn2">+</span></td>
+                    </tr>
+                    <tr>
+                        <td>Correcta: </td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Opcion 1: </td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Opcion 2: </td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Opcion 3: </td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+                </table>
+                <br>
+                <div class="text-center"><button class="btn" type="submit">INGRESAR</button></div>
+            </div>
+            <div class="col-sm-8">
+               <h3>LISTADO DE PREGUNTAS</h3>
+                <table class="table"> 
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Pregunta</th>
+                            <th>Nivel</th>
+                            <th>Categoria</th>
+                            <th>Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th><button class="btn2" type="submit">Editar</button></th>
+                    </tbody>
+                </table>
+            </div>
         </div>
-
-        <div class="stats-col text-center col-md-3 col-sm-6">
-          <div class="circle">
-            <span class="stats-no" data-toggle="counter-up">79</span> Actualizaciones
-          </div>
-        </div>
-
-        <div class="stats-col text-center col-md-3 col-sm-6">
-          <div class="circle">
-            <span class="stats-no" data-toggle="counter-up">1,463</span> Jugadores Registrados
-          </div>
-        </div>
-
-        <div class="stats-col text-center col-md-3 col-sm-6">
-          <div class="circle">
-            <span class="stats-no" data-toggle="counter-up">15</span> Problemas Resueltos
-          </div>
-        </div>
-      </div>
+     
     </div>
   </section>
   <!-- /About -->
@@ -180,16 +214,45 @@
   <!-- Features -->
 
   <section class="features" id="features">
-     <div class="block bg-primary block-pd-lg block-bg-overlay text-center" data-bg-img="img/parallax-bg.jpg" data-settings='{"stellar-background-ratio": 0.6}' data-toggle="parallax-bg">
-    <h2>
-        Bienvenido a EduQuiz tu juego Educativo
-      </h2>
-
-    <p>
-      This is the most powerful theme with thousands of options that you have never seen before.
-    </p>
-    <img alt="Bell - A perfect theme" class="gadgets-img hidden-md-down" src="img/gadgets.png">
-  </div>
+    <div class="container text-center">
+      <h2>
+          ADMINISTRACIÓN DE LAS PREGUNTAS
+       </h2>
+        <div class="row">
+            <div class="col-sm-4">
+               <h3>AGREGAR CATEGORIA</h3>
+                <table>
+                    <tr>
+                        <td>Nonbre: </td>
+                        <td><input type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>Imagen: </td>
+                        <td><input type="file"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-8">
+               <h3>LISTADO DE CATEGORIAS</h3>
+                <table>
+                    <table class="table"> 
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Imagen</th>
+                            <th>Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th>...</th>
+                        <th>...</th>
+                        <th><button class="btn2" type="submit">Editar</button></th>
+                    </tbody>
+                </table>
+                </table>
+            </div>
+        </div>
+      </div>
   </section>
   <!-- /Features -->
  
@@ -199,154 +262,36 @@
   <section class="portfolio" id="portfolio">
     <div class="container text-center">
       <h2>
-          Portafolio de Desarrollo
-        </h2>
-
-      <p>
-        Voluptua scripserit per ad, laudem viderer sit ex. Ex alia corrumpit voluptatibus usu, sed unum convenire id. Ut cum nisl moderatius, Per nihil dicant commodo an.
-      </p>
-    </div>
-
-    <div class="portfolio-grid">
-      <div class="row">
-        <div class="col-lg-3 col-sm-6 col-xs-12">
-          <div class="card card-block">
-            <a href="#"><img alt="" src="img/porf-1.jpg">
-              <div class="portfolio-over">
-                <div>
-                  <h3 class="card-title">
-                    Trabajando en los modelos
-                  </h3>
-
-                  <p class="card-text">
-                    Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
-                  </p>
-                </div>
-              </div></a>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-sm-6 col-xs-12">
-          <div class="card card-block">
-            <a href="#"><img alt="" src="img/porf-2.jpg">
-              <div class="portfolio-over">
-                <div>
-                  <h3 class="card-title">
-                    The Dude Rockin'
-                  </h3>
-
-                  <p class="card-text">
-                    Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
-                  </p>
-                </div>
-              </div></a>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-sm-6 col-xs-12">
-          <div class="card card-block">
-            <a href="#"><img alt="" src="img/porf-3.jpg">
-              <div class="portfolio-over">
-                <div>
-                  <h3 class="card-title">
-                    The Dude Rockin'
-                  </h3>
-
-                  <p class="card-text">
-                    Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
-                  </p>
-                </div>
-              </div></a>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-sm-6 col-xs-12">
-          <div class="card card-block">
-            <a href="#"><img alt="" src="img/porf-4.jpg">
-              <div class="portfolio-over">
-                <div>
-                  <h3 class="card-title">
-                    The Dude Rockin'
-                  </h3>
-
-                  <p class="card-text">
-                    Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
-                  </p>
-                </div>
-              </div></a>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-lg-3 col-sm-6 col-xs-12">
-          <div class="card card-block">
-            <a href="#"><img alt="" src="img/porf-5.jpg">
-              <div class="portfolio-over">
-                <div>
-                  <h3 class="card-title">
-                    The Dude Rockin'
-                  </h3>
-
-                  <p class="card-text">
-                    Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
-                  </p>
-                </div>
-              </div></a>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-sm-6 col-xs-12">
-          <div class="card card-block">
-            <a href="#"><img alt="" src="img/porf-6.jpg">
-              <div class="portfolio-over">
-                <div>
-                  <h3 class="card-title">
-                    The Dude Rockin'
-                  </h3>
-
-                  <p class="card-text">
-                    Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
-                  </p>
-                </div>
-              </div></a>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-sm-6 col-xs-12">
-          <div class="card card-block">
-            <a href="#"><img alt="" src="img/porf-7.jpg">
-              <div class="portfolio-over">
-                <div>
-                  <h3 class="card-title">
-                    The Dude Rockin'
-                  </h3>
-
-                  <p class="card-text">
-                    Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
-                  </p>
-                </div>
-              </div></a>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-sm-6 col-xs-12">
-          <div class="card card-block">
-            <a href="#"><img alt="" src="img/porf-8.jpg">
-              <div class="portfolio-over">
-                <div>
-                  <h3 class="card-title">
-                    The Dude Rockin'
-                  </h3>
-
-                  <p class="card-text">
-                    Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
-                  </p>
-                </div>
-              </div></a>
-          </div>
-        </div>
-      </div>
+          LISTA DE PREGUNTAS ENVIADAS POR USUARIOS
+      </h2>
+                <table class="table"> 
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Pregunta</th>
+                            <th>Nivel</th>
+                            <th>Categoria</th>
+                            <th>Correcta</th>
+                            <th>Opcion 1</th>
+                            <th>Opcion 2</th>
+                            <th>Opcion 3</th>
+                            <th>Acpetar</th>
+                            <th>Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th><button class="btn2" type="submit">Aceptar</button></th>
+                        <th><button class="btn2" type="submit">Editar</button></th>
+                    </tbody>
+                </table>   
     </div>
   </section>
   <!-- /Portfolio -->
@@ -358,82 +303,22 @@
       <h2 class="text-center">
           Conoce a nuestro equipo de Desarrollo
         </h2>
-
-      <div class="row">
-
-        <div class="col-sm-4 col-xs-6">
-          <div class="card card-block">
-            <a href="#"><img alt="" class="team-img" src="img/team-5.jpg">
-              <div class="card-title-wrap">
-                <span class="card-title">Ricardo Esparza</span> <span class="card-text">Artista y Desarrollador</span>
-              </div>
-
-              <div class="team-over">
-                <h4 class="hidden-md-down">
-                  Sus contactos
-                </h4>
-
-                <nav class="social-nav">
-                  <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-linkedin"></i></a> <a href="#"><i class="fa fa-envelope"></i></a>
-            </nav>
-
-            <p>
-              Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
-            </p>
-          </div>
-          </a>
-        </div>
-      </div>
-
-     
-    <div class="col-sm-4 col-xs-6">
-      <div class="card card-block">
-        <a href="#"><img alt="" class="team-img" src="img/team-1.jpeg">
-              <div class="card-title-wrap">
-                <span class="card-title">Erick Jara</span> <span class="card-text">Desarrollador Principal</span>
-              </div>
-
-              <div class="team-over">
-                <h4 class="hidden-md-down">
-                  Connect with me
-                </h4>
-
-                <nav class="social-nav">
-                  <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-linkedin"></i></a> <a href="#"><i class="fa fa-envelope"></i></a>
-        </nav>
-
-        <p>
-          Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
-        </p>
-      </div>
-      </a>
-    </div>
-    </div>
-
-    <div class="col-sm-4 col-xs-6">
-      <div class="card card-block">
-        <a href="#"><img alt="" class="team-img" src="img/team-1.jpeg">
-              <div class="card-title-wrap">
-                <span class="card-title">Gerardo Ramirez</span> <span class="card-text">Desarollador</span>
-              </div>
-
-              <div class="team-over">
-                <h4 class="hidden-md-down">
-                  Connect with me
-                </h4>
-
-                <nav class="social-nav">
-                  <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-linkedin"></i></a> <a href="#"><i class="fa fa-envelope"></i></a>
-        </nav>
-
-        <p>
-          Lorem ipsum dolor sit amet, eu sed suas eruditi honestatis.
-        </p>
-      </div>
-      </a>
-    </div>
-    </div>
-    </div>
+         <table class="table"> 
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Correo</th>
+                            <th>Estado</th>
+                            <th>Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th><button class="btn2" type="submit">Editar</button></th>
+                    </tbody>
+                </table>   
     </div>
     </center>
   </section>

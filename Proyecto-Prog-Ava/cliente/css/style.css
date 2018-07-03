@@ -48,15 +48,29 @@ a {
   border-radius: 50px;
 }
 
+.btn2 {
+  background-color: #199EB8;
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
+  font-weight: 800;
+  color: #fff;
+  padding: 5px 15px;
+  border-radius:20px;
+}
+
 .btn:hover {
   background-color: #E04F00;
   color: #fff;
 }
-
+.btn2:hover {
+  background-color: #E04F00;
+  color: #fff;
+}
 .btn:focus {
   color: #fff;
 }
-
+.btn2:focus {
+  color: #fff;
+}
 .btn-ghost {
   border: 3px solid #fff;
   background-color: transparent;
