@@ -74,28 +74,19 @@ class PersonaController extends Controller
                         ->where("estado", 1)->first();
                 if ($persona) {
                     if ($persona->correo === $data["correo"] && $persona->clave === $data["clave"]) {
-                        if ($persona->rol === 1) {//si es un usuario comun
-                            $nivel_user = Nivel_Usuario::where("id_persona", $persona->id)->first();
-                            return response()->json(["correo"=>$persona->correo, 
-                            "external_id"=>$persona->external_id,
-                            "nombre"=>$persona->nombre,
-                            "clave"=>$persona->clave,
-                            "rol"=>$persona->rol,
-                            "nivel"=>$nivel_user->nivel,
-                            "experiencia"=>$nivel_user->experiencia,
-                            "clasificacion"=>$nivel_user->clasificacion,
-                            "puntaje"=>$nivel_user->puntaje,
-                            "token"=> base64_encode($persona->external_id.'--'.$persona->correo), 
-                            "mensaje"=>"Operacion existosa", "siglas"=>"OE"], 200);
-                        }else{//si es un admin
-                            return response()->json(["correo"=>$persona->correo, 
-                            "external_id"=>$persona->external_id,
-                            "nombre"=>$persona->nombre,
-                            "clave"=>$persona->clave,
-                            "rol"=>$persona->rol,
-                            "token"=> base64_encode($persona->external_id.'--'.$persona->correo), 
-                            "mensaje"=>"Operacion existosa", "siglas"=>"OE"], 200);
-                        }
+                        //ya no se distingue entre usuario o admin al enviar esta info porque es vital en ambos...
+                        $nivel_user = Nivel_Usuario::where("id_persona", $persona->id)->first();
+                        return response()->json(["correo"=>$persona->correo, 
+                        "external_id"=>$persona->external_id,
+                        "nombre"=>$persona->nombre,
+                        "clave"=>$persona->clave,
+                        "rol"=>$persona->rol,
+                        "nivel"=>$nivel_user->nivel,
+                        "experiencia"=>$nivel_user->experiencia,
+                        "clasificacion"=>$nivel_user->clasificacion,
+                        "puntaje"=>$nivel_user->puntaje,
+                        "token"=> base64_encode($persona->external_id.'--'.$persona->correo), 
+                        "mensaje"=>"Operacion existosa", "siglas"=>"OE"], 200);
                     }else{
                         return response()->json(["mensaje"=>"Incompatibilidad de datos", "siglas"=>"IDD"], 203);
                     }
