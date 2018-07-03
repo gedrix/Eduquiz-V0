@@ -51,6 +51,16 @@ class PersonaController extends Controller
                     $persona->rol = 1;//usuario comun
                     $persona->external_id = Utilidades\UUID::v4();
                     $persona->save();
+                    //retardo la ejecucion para que termine de ejecutar la sentencia en la base de datos
+                    sleep(1);//retraso de 1 segundo
+                    //buscar el mismo usuario creado y almaceno la demas info del jugador
+                    $nivel_user = new Nivel_Usuario();
+                    $nivel_user->nivel = 1;
+                    $nivel_user->experiencia = 0;
+                    $nivel_user->clasificacion = 0;
+                    $nivel_user->puntaje = 0;
+                    $nivel_user->Persona()->associate($persona);//asocio las tablas relacionadas
+                    $nivel_user->save();
                     return response()->json(["mensaje"=>"Operacion existosa", "siglas"=>"OE"], 200);
                 }else{
                     return response()->json(["mensaje"=>"Faltan datos en formulario", "siglas"=>"FDEF"], 203);

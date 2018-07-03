@@ -64,18 +64,21 @@ class PreguntaController extends Controller
                         $q->where('id_categoria', $idCategoria);
                     })->first();*/
                     $dataOpciones = array();
+                    $dataOpcionEstado = array();
                     $dataCategoria = array();
                     foreach ($listaOpciones as $item) {
-                        $dataOpciones[] = ["opcion" => $item->opcion, 
-                            "estado" => $item->estado];
+                        $dataOpciones[] = $item->opcion; 
+                        $dataOpcionEstado[] = $item->estado;
                     }
                     foreach ($listaCategoria as $item) {
                         $cat = Categoria::where("id", $item->id_categoria)->first();
-                        $dataCategoria[] = ["nombre" => $cat->nombre];
+                        $dataCategoria[] = $cat->nombre;
                     }
                     return response()->json(["pregunta"=>$pregunta->pregunta,
-                        "dificultad"=>$pregunta->dificultad, "categorias"=>$dataCategoria, 
-                        "opciones"=>$dataOpciones], 200);
+                        "dificultad"=>$pregunta->dificultad, "categoria"=>$dataCategoria, 
+                        "opcion"=>$dataOpciones,
+                        "opcionEstado"=>$dataOpcionEstado,
+                        "mensaje"=>"Operacion existosa"], 200);
                 }else{
                     return response()->json(["mensaje"=>"No se ha encontrado ningun dato", "siglas"=>"NDE"], 203);
                 }
