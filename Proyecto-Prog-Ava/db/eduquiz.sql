@@ -30,7 +30,7 @@ CREATE TABLE `categoria` (
   `imagen` varchar(255) DEFAULT NULL,
   `external_id` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `categoria` (
 
 LOCK TABLES `categoria` WRITE;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
-INSERT INTO `categoria` VALUES (2,'Ciencia',NULL,'e4d105e8-af00-40f6-90b8-022df6eb2bfb');
+INSERT INTO `categoria` VALUES (2,'Ciencia',NULL,'e4d105e8-af00-40f6-90b8-022df6eb2bfb'),(3,'Deportes',NULL,'e2d135e8-ab10-40d6-90a8-086df6cb7bfx'),(4,'Historia',NULL,'a2c13568-ab10-40d6-90a8-0865f6eb7cfa'),(5,'Musica',NULL,'e2d78578-a560-4456-12a8-0889f67b734x');
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -60,7 +60,7 @@ CREATE TABLE `nivel_usuario` (
   PRIMARY KEY (`id`),
   KEY `id_persona` (`id_persona`),
   CONSTRAINT `nivel_usuario_ibfk_1` FOREIGN KEY (`id_persona`) REFERENCES `persona` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,7 +69,7 @@ CREATE TABLE `nivel_usuario` (
 
 LOCK TABLES `nivel_usuario` WRITE;
 /*!40000 ALTER TABLE `nivel_usuario` DISABLE KEYS */;
-INSERT INTO `nivel_usuario` VALUES (1,4,400,1,2,105),(2,1,0,0,4,0),(3,1,0,0,5,0);
+INSERT INTO `nivel_usuario` VALUES (1,4,400,1,2,105),(2,1,0,0,4,0),(3,1,0,0,5,0),(4,1,0,0,6,0),(5,1,0,0,1,0),(6,1,0,0,3,0);
 /*!40000 ALTER TABLE `nivel_usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -88,7 +88,7 @@ CREATE TABLE `opcion` (
   PRIMARY KEY (`id`),
   KEY `id_pregunta` (`id_pregunta`),
   CONSTRAINT `opcion_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,6 +97,7 @@ CREATE TABLE `opcion` (
 
 LOCK TABLES `opcion` WRITE;
 /*!40000 ALTER TABLE `opcion` DISABLE KEYS */;
+INSERT INTO `opcion` VALUES (1,'Rusia','Correcta',1),(2,'Alemania','Incorrecta',1),(3,'Brasil','Incorrecta',1),(4,'Africa','Incorrecta',1),(5,'100 ºC','Correcta',2),(6,'30 ºC','Incorrecta',2),(7,'74 ºC','Incorrecta',2),(8,'45 ºC','Incorrecta',2),(9,'1492','Correcta',3),(10,'1501','Incorrecta',3),(11,'1509','Incorrecta',3),(12,'1489','Incorrecta',3),(13,'Si','Correcta',4),(14,'No','Incorrecta',4),(15,'Depende del clima','Incorrecta',4),(16,'Depende del tipo de planta','Incorrecta',4);
 /*!40000 ALTER TABLE `opcion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,7 +121,7 @@ CREATE TABLE `persona` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `correo_UNIQUE` (`correo`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,30 +130,9 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (1,'Erick Jara V','erickuchiha3@gmail.com','Wargosh',0,1,'2e3c79c1-9858-4590-a8a3-d2d8f7b6063b',NULL,'2018-06-23 08:04:04','2018-06-23 20:01:04'),(2,'Sami Gonzalez','samisamantha@gmail.com','6789',1,1,'f68f01cf-9ffb-4660-a75d-43d3d0877a2e',NULL,'2018-06-23 08:07:57','2018-06-23 08:07:57'),(3,'Gerardo Ramirez','gedoram@gmail.com','55555',0,1,'10da295c-f0f2-423b-8e45-df7fc26bb09d',NULL,'2018-06-23 09:06:28','2018-06-23 09:06:28'),(4,'Ricardo Esparza','riky@gmail.com','4444',0,1,'43707048-432a-4ce7-9f30-2fed024ea828',NULL,'2018-06-24 16:39:18','2018-06-24 16:39:18'),(5,'Jena','jeandar@gmail.com','12345',1,1,'6ba2e0fe-115d-4f51-8414-7d3e74b00371',NULL,'2018-06-25 03:14:49','2018-06-25 03:14:49');
+INSERT INTO `persona` VALUES (1,'Erick Jara V','erickuchiha3@gmail.com','Wargosh',0,1,'2e3c79c1-9858-4590-a8a3-d2d8f7b6063b',NULL,'2018-06-23 08:04:04','2018-06-23 20:01:04'),(2,'Sami Gonzalez','samisamantha@gmail.com','6789',1,1,'f68f01cf-9ffb-4660-a75d-43d3d0877a2e',NULL,'2018-06-23 08:07:57','2018-06-23 08:07:57'),(3,'Gerardo Ramirez','gedoram@gmail.com','55555',0,1,'10da295c-f0f2-423b-8e45-df7fc26bb09d',NULL,'2018-06-23 09:06:28','2018-06-23 09:06:28'),(4,'Ricardo Esparza','riky@gmail.com','4444',0,1,'43707048-432a-4ce7-9f30-2fed024ea828',NULL,'2018-06-24 16:39:18','2018-06-24 16:39:18'),(5,'Jena','jeandar@gmail.com','12345',1,1,'6ba2e0fe-115d-4f51-8414-7d3e74b00371',NULL,'2018-06-25 03:14:49','2018-06-25 03:14:49'),(6,'Asasas','er@gmail.com','asd',1,1,'1798fa5d-640c-4b4a-ba8d-e2b88e488cfc',NULL,'2018-06-27 15:17:11','2018-06-27 15:17:11');
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 trigger info_user_ai after insert on persona
-for each row
-begin
-if new.rol = 1 and new.estado = 1 then
-	insert into nivel_usuario (nivel, experiencia, clasificacion, id_persona) values(1, 0, 0, new.id);
-end if;
-end */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `preg_cate`
@@ -177,6 +157,7 @@ CREATE TABLE `preg_cate` (
 
 LOCK TABLES `preg_cate` WRITE;
 /*!40000 ALTER TABLE `preg_cate` DISABLE KEYS */;
+INSERT INTO `preg_cate` VALUES (1,3),(2,2),(3,4),(4,5),(4,2);
 /*!40000 ALTER TABLE `preg_cate` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -199,7 +180,7 @@ CREATE TABLE `pregunta` (
   PRIMARY KEY (`id`),
   KEY `id_persona` (`id_persona`),
   CONSTRAINT `pregunta_ibfk_1` FOREIGN KEY (`id_persona`) REFERENCES `persona` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -208,6 +189,7 @@ CREATE TABLE `pregunta` (
 
 LOCK TABLES `pregunta` WRITE;
 /*!40000 ALTER TABLE `pregunta` DISABLE KEYS */;
+INSERT INTO `pregunta` VALUES (1,'¿donde se realizó el mundial 2018?','Facil',1,'1798fa5d-640c-434a-cd8d-e2b88e48afc','2018-06-30 02:31:03','2018-06-30 02:31:03',1),(2,'¿A los cuántos grados centígrados hierve el agua?','Facil',1,'37888a9d-445a-63a7-cd2a-e4b4a6488ac','2018-06-30 02:31:59','2018-06-30 02:31:59',1),(3,'¿En que año Colón descubrió America?','Facil',1,'3c6988a5d-340c-4aca-fa8d-e2458ad4fffc','2018-07-01 02:31:59','2018-07-01 02:31:59',3),(4,'¿Es cierto que las flores crecen más rápido si suena música a su alrededor?','Facil',1,'1798fa5d-648c-4436-cd89-e2688ef8acc','2018-07-01 18:33:59','2018-07-01 18:33:59',4);
 /*!40000 ALTER TABLE `pregunta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -228,4 +210,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-26 19:31:18
+-- Dump completed on 2018-07-02 20:46:22
