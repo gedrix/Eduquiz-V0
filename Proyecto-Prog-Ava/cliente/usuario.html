@@ -85,8 +85,8 @@
 
       <nav id="nav-menu-container">
         <ul class="nav-menu">
-          <li><a href="#about">Sobre Nosotros</a></li>
-          <li><a href="#features">Caracteristicas</a></li>
+          <li><a href="#about">Perfil</a></li>
+          <li><a href="#features">Sugerencias de preguntas</a></li>
           <li><a href="#portfolio">Protafolio</a></li>
           <li><a href="#team">Equipo</a></li>
          <li><a href="#contact">Contactanos</a></li>
@@ -94,12 +94,13 @@
       </nav>
       <!-- #nav-menu-container -->
 
-      <nav class="nav-menu pull-right d-none d-lg-inline">
+     <!-- <nav class="nav-menu pull-right d-none d-lg-inline">
           <a href="#" data-toggle="modal" data-target="#exampleModal">Login</a><a href="#">Register</a>
-      </nav>
+      </nav>-->
     </div>
     
-            <!-- Modal -->
+            <!-- Modal Modal del Login-->
+            <!-- 
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -127,7 +128,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
     
   </header>
   <!-- #header -->
@@ -137,59 +138,165 @@
   <section class="about" id="about">
     <div class="container text-center">
       <h2>
-          Todo sobre EduQuiz
-        </h2>
-
-      <p>
-        Voluptua scripserit per ad, laudem viderer sit ex. Ex alia corrumpit voluptatibus usu, sed unum convenire id. Ut cum nisl moderatius, per nihil dicant commodo an. Eum tacimates erroribus ad. Atqui feugiat euripidis ea pri, sed veniam tacimates ex. Menandri
-        temporibus an duo.
-      </p>
-
-      <div class="row stats-row">
-        <div class="stats-col text-center col-md-3 col-sm-6">
-          <div class="circle">
-            <span class="stats-no" data-toggle="counter-up">232</span> Jugadores Activos
+          PERFIL DE USUARIO
+      </h2>
+      <div class="row">
+        <div class="col-sm-4">
+                <h3>Datos</h3>
+               <img class="aa" src="img/perfil.png" height="130" width="130" >
+               <br> <br>
+               <input type="file"  id="nuevaFoto" name="nuevaFoto"  />
+               <br> <br>
+                <table>
+                    <tr>
+                        <td>Usuario: </td>
+                        <td><input type="text" class="form-control" readonly="readonly"></td>
+                    </tr>
+                    <tr>
+                        <td>Nivel: </td>
+                        <td><input type="text" class="form-control" readonly="readonly"></td>
+                    </tr>
+                    <tr>
+                        
+                        <td>Experiencia: </td>
+                        <td><input type="text" class="form-control" readonly="readonly"></td>
+                       
+                    </tr>
+         
+                </table>
+                <br>
+               <div class="text-center"><button class="btn" type="submit"
+                data-toggle="modal" data-target="#exampleModal">Cambiar Clave</button></div>
+                  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Cambiar Clave</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">X</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <table>
+                              <tr>
+                                  <td>Nueva Clave:</td>
+                                  <td><input type="text" class="form-control" placeholder="Clave"></td>
+                              </tr>
+                              <tr>
+                                  <td>Confirmar Clave:</td>
+                                  <td><input type="text" class="form-control" placeholder="Confirmar Clave"></td>
+                              </tr>
+                          </table>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn" data-dismiss="modal">Aceptar</button>
+                          <button type="button" class="btn">Cancelar</button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
           </div>
-        </div>
 
-        <div class="stats-col text-center col-md-3 col-sm-6">
-          <div class="circle">
-            <span class="stats-no" data-toggle="counter-up">79</span> Actualizaciones
-          </div>
-        </div>
-
-        <div class="stats-col text-center col-md-3 col-sm-6">
-          <div class="circle">
-            <span class="stats-no" data-toggle="counter-up">1,463</span> Jugadores Registrados
-          </div>
-        </div>
-
-        <div class="stats-col text-center col-md-3 col-sm-6">
-          <div class="circle">
-            <span class="stats-no" data-toggle="counter-up">15</span> Problemas Resueltos
-          </div>
-        </div>
+        <div class="col-sm-8">
+               <h3>Puntaje Global</h3>
+                <table class="table"> 
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Nivel</th>
+                            <th>Experiencia</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        
+                    </tbody>
+                </table>
+            </div>
       </div>
+
+      
     </div>
   </section>
+  <hr>
   <!-- /About -->
   <!-- Parallax -->
 
  
   <!-- /Parallax -->
-  <!-- Features -->
+  <!-- Sugerencias -->
 
-  <section class="features" id="features">
-     <div class="block bg-primary block-pd-lg block-bg-overlay text-center" data-bg-img="img/parallax-bg.jpg" data-settings='{"stellar-background-ratio": 0.6}' data-toggle="parallax-bg">
-    <h2>
-        Bienvenido a EduQuiz tu juego Educativo
-      </h2>
-
-    <p>
-      This is the most powerful theme with thousands of options that you have never seen before.
-    </p>
-    <img alt="Bell - A perfect theme" class="gadgets-img hidden-md-down" src="img/gadgets.png">
-  </div>
+    <section class="features" id="features">
+    <div class="container text-center">
+      <h2>
+          SUGERENCIAS DE PREGUNTAS
+       </h2>
+        <div class="row">
+            <div class="col-sm-4">
+               <h3>Agregar Pregunta</h3>
+                <table>
+                    <tr>
+                        <td>Pregunta: </td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Nivel: </td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <!-- <td><br>Categorias<br><input type="radio">Cate1<br><input type="radio">Cate2<br>
+                        <input type="radio">Cate1<br><input type="radio">Cate2<br><br></td>
+                        <td><br><br><input type="radio">Cate1<br><input type="radio">Cate2<br>
+                        <input type="radio">Cate1<br><input type="radio">Cate2<br><br></td> -->
+                        <td>Categorias: </td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><span class="btn2">+</span></td>
+                    </tr>
+                    <tr>
+                        <td>Correcta: </td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Opcion 1: </td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Opcion 2: </td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Opcion 3: </td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+                </table>
+                <br>
+                <div class="text-center"><button class="btn" type="submit">INGRESAR</button></div>
+            </div>
+            <div class="col-sm-8">
+               <h3>LISTADO DE PREGUNTAS SUGERIDAS</h3>
+                <table class="table"> 
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Pregunta</th>
+                            <th>Nivel</th>
+                            <th>Categoria</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                       
+                    </tbody>
+                </table>
+            </div>
+        </div>
+     
+    </div>
   </section>
   <!-- /Features -->
  
