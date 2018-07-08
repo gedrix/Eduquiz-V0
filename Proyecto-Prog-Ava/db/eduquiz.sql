@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `eduquiz` /*!40100 DEFAULT CHARACTER SET latin1 */;
+﻿CREATE DATABASE  IF NOT EXISTS `eduquiz` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `eduquiz`;
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
@@ -39,7 +39,7 @@ CREATE TABLE `categoria` (
 
 LOCK TABLES `categoria` WRITE;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
-INSERT INTO `categoria` VALUES (2,'Ciencia',NULL,'e4d105e8-af00-40f6-90b8-022df6eb2bfb'),(3,'Deportes',NULL,'e2d135e8-ab10-40d6-90a8-086df6cb7bfx'),(4,'Historia',NULL,'a2c13568-ab10-40d6-90a8-0865f6eb7cfa'),(5,'Musica',NULL,'e2d78578-a560-4456-12a8-0889f67b734x');
+INSERT INTO `categoria` VALUES (2,'Ciencia',NULL,'e4d105e8-af00-40f6-90b8-022df6eb2bfb'),(3,'Geofrafia',NULL,'e2d135e8-ab10-40d6-90a8-086df6cb7bfx'),(4,'Historia',NULL,'a2c13568-ab10-40d6-90a8-0865f6eb7cfa'),(5,'Musica',NULL,'e2d78578-a560-4456-12a8-0889f67b734x'),(6,'Deportes',NULL,'e2d78578-a561-4456-12a8-0889f67b734x'),(7,'Matematicas',NULL,'e2d78578-a560-4456-12a8-0889a67b734x'),(8,'Astronomia',NULL,'b2d78578-a560-4456-12a8-0889f67b734x');
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
