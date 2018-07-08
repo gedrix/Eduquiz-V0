@@ -60,7 +60,7 @@ CREATE TABLE `nivel_usuario` (
   PRIMARY KEY (`id`),
   KEY `id_persona` (`id_persona`),
   CONSTRAINT `nivel_usuario_ibfk_1` FOREIGN KEY (`id_persona`) REFERENCES `persona` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,7 +69,7 @@ CREATE TABLE `nivel_usuario` (
 
 LOCK TABLES `nivel_usuario` WRITE;
 /*!40000 ALTER TABLE `nivel_usuario` DISABLE KEYS */;
-INSERT INTO `nivel_usuario` VALUES (1,4,400,1,2,105),(2,1,0,0,4,0),(3,1,0,0,5,0),(4,1,0,0,6,0),(5,1,0,0,1,0),(6,1,0,0,3,0);
+INSERT INTO `nivel_usuario` VALUES (1,4,400,1,2,105),(2,1,0,0,4,0),(3,1,0,0,5,0),(4,1,0,0,6,0),(5,1,0,0,1,0),(6,1,0,0,3,0),(9,1,0,0,11,0),(10,1,0,0,12,0);
 /*!40000 ALTER TABLE `nivel_usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +121,7 @@ CREATE TABLE `persona` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `correo_UNIQUE` (`correo`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -130,7 +130,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (1,'Erick Jara V','erickuchiha3@gmail.com','Wargosh',0,1,'2e3c79c1-9858-4590-a8a3-d2d8f7b6063b',NULL,'2018-06-23 08:04:04','2018-06-23 20:01:04'),(2,'Sami Gonzalez','samisamantha@gmail.com','6789',1,1,'f68f01cf-9ffb-4660-a75d-43d3d0877a2e',NULL,'2018-06-23 08:07:57','2018-06-23 08:07:57'),(3,'Gerardo Ramirez','gedoram@gmail.com','55555',0,1,'10da295c-f0f2-423b-8e45-df7fc26bb09d',NULL,'2018-06-23 09:06:28','2018-06-23 09:06:28'),(4,'Ricardo Esparza','riky@gmail.com','4444',0,1,'43707048-432a-4ce7-9f30-2fed024ea828',NULL,'2018-06-24 16:39:18','2018-06-24 16:39:18'),(5,'Jena','jeandar@gmail.com','12345',1,1,'6ba2e0fe-115d-4f51-8414-7d3e74b00371',NULL,'2018-06-25 03:14:49','2018-06-25 03:14:49'),(6,'Asasas','er@gmail.com','asd',1,1,'1798fa5d-640c-4b4a-ba8d-e2b88e488cfc',NULL,'2018-06-27 15:17:11','2018-06-27 15:17:11');
+INSERT INTO `persona` VALUES (1,'Erick Jara V','erickuchiha3@gmail.com','Wargosh',0,1,'2e3c79c1-9858-4590-a8a3-d2d8f7b6063b',NULL,'2018-06-23 08:04:04','2018-06-23 20:01:04'),(2,'Sami Gonzalez','samisamantha@gmail.com','6789',1,1,'f68f01cf-9ffb-4660-a75d-43d3d0877a2e',NULL,'2018-06-23 08:07:57','2018-06-23 08:07:57'),(3,'Gerardo Ramirez','gedoram@gmail.com','55555',0,1,'10da295c-f0f2-423b-8e45-df7fc26bb09d',NULL,'2018-06-23 09:06:28','2018-06-23 09:06:28'),(4,'Ricardo Esparza','riky@gmail.com','4444',0,1,'43707048-432a-4ce7-9f30-2fed024ea828',NULL,'2018-06-24 16:39:18','2018-06-24 16:39:18'),(5,'Jena','jeandar@gmail.com','12345',1,1,'6ba2e0fe-115d-4f51-8414-7d3e74b00371',NULL,'2018-06-25 03:14:49','2018-06-25 03:14:49'),(6,'Asasas','er@gmail.com','asd',1,1,'1798fa5d-640c-4b4a-ba8d-e2b88e488cfc',NULL,'2018-06-27 15:17:11','2018-06-27 15:17:11'),(9,'Liana Ochoa','lian@gmail.com','asdf',1,1,'44d02fef-aff7-4375-bdab-cf6b329e6b86',NULL,'2018-07-03 02:12:59','2018-07-03 02:12:59'),(11,'Holi Boli','holiboli@gmial.com','12345',1,1,'2cfeea8f-ced9-428c-86f4-df483abcf0a1',NULL,'2018-07-03 02:31:56','2018-07-03 02:31:56'),(12,'Julio Ca?ar','lex@gmail.com','lex',1,1,'cb9b3f3f-f758-4059-9308-298c684153ef',NULL,'2018-07-03 02:56:35','2018-07-03 02:56:35');
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -210,4 +210,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-07-02 20:46:22
+-- Dump completed on 2018-07-07 21:49:47
