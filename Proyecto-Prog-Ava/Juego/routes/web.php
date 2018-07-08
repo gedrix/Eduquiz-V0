@@ -29,6 +29,7 @@ $router->post('/usuario/actualizarinfo/{external_id}', 'PersonaController@Actual
 
 //preguntas
 $router->post('/preguntas/ramdon', 'PreguntaController@obtenerPreguntaRamdon');
+$router->post('/preguntas/registro/{external_id}', 'PreguntaController@registrar');
 
 //categoriaController
 $router->post('/usuario/registroCategoria', 'CategoriaController@Registrar');

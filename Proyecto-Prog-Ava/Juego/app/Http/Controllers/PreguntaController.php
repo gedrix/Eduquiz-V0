@@ -15,11 +15,11 @@ use Illuminate\Http\Request;
 
 class PreguntaController extends Controller
 {
-    public function registrar(Request $request){
+    public function registrar(Request $request, $external_id){
         if ($request->json()) {
             $data = $request->json()->all();
-            $persona = Persona::where("correo", $data["correo"])->first();
-            if ($persona) {
+            $persona = Persona::where("external_id", $external_id)->first();
+            if ($persona) {//el usuario debe existir
                 $preguntaObj = Pregunta::where("pregunta", $data["pregunta"])->first();
                 if (!$preguntaObj) {//si no existe
                     if ($data["pregunta"] != "" && $data["dificultad"] != "") {
@@ -33,8 +33,26 @@ class PreguntaController extends Controller
                         $pregunta->external_id = Utilidades\UUID::v4();
                         $pregunta->id_persona = $persona->id;
                         $pregunta->save();
-                        return response()->json(["mensaje"=>"Operacion existosa",
-                            "external_id"=>$pregunta->external_id, "siglas"=>"OE"], 200);
+                        //guardo a que categoria pertenece esta pregunta(por ahora solo en una categoria)
+                        for ($i=0; $i < count($data["categoria"]); $i++) { 
+                            $categoria = Categoria::where("nombre", $data["categoria"][$i])->first();
+                            $preg_cate = new Preg_Cate();
+                            $preg_cate->Categoria()->associate($categoria);//asocio las tablas relacionadas
+                            $preg_cate->Pregunta()->associate($pregunta);
+                            $preg_cate->save();
+                        }
+                        //guardo las (4) opciones de esta pregunta
+                        for ($i=0; $i < 4; $i++) { 
+                            $opcion = new Opcion();
+                            $opcion->opcion = $data["opcion"][$i];
+                            if ($i === 0)
+                                $opcion->estado = "Correcta";
+                            else
+                                $opcion->estado = "Incorrecta";
+                            $opcion->Pregunta()->associate($pregunta);
+                            $opcion->save();                     
+                        }
+                        return response()->json(["mensaje"=>"Operacion existosa", "siglas"=>"OE"], 200);
                     }else{
                         return response()->json(["mensaje"=>"Faltan datos en formulario", "siglas"=>"FDEF"], 203);
                     }
