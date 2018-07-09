@@ -43,6 +43,35 @@
     Author: BootstrapMade.com
     Author URL: https://bootstrapmade.com
   ======================================================= -->
+
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/lib.jquery.json-2.3.min.js"></script>
+  <script>
+    function registrar()
+    {
+      //alert("hola");
+      var nombre = document.getElementById("usuarioLabel").value,
+          correo = document.getElementById("correoLabel").value,
+          clave = document.getElementById("claveLabel").value,
+          clave2 = document.getElementById("vclaveLabel").value;
+
+      if (clave == clave2) 
+        {
+          //alert(usuario+" "+correo);
+          $.ajax({
+                type:  'POST',
+                url:   'http://localhost/Juego/public/index.php/usuario/registro',
+                data: JSON.stringify({"nombre":nombre,"clave":clave,"correo":correo}),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (data) {
+                    alert("Se Ingreso Correctamente");
+                }
+                });
+
+        };
+    }
+  </script>
 </head>
 
 <body>
@@ -95,11 +124,11 @@
       <!-- #nav-menu-container -->
 
       <nav class="nav-menu pull-right d-none d-lg-inline">
-          <a href="#" data-toggle="modal" data-target="#exampleModal">Login</a><a href="#">Register</a>
+          <a href="#" data-toggle="modal" data-target="#exampleModal">LOGEAR</a><a href="#" data-toggle="modal" data-target="#ModalRegistrar">REGISTRAR</a>
       </nav>
     </div>
     
-            <!-- Modal -->
+            <!-- Modal logear -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -122,13 +151,52 @@
                 </table>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn" data-dismiss="modal">Aceptar</button>
-                <button type="button" class="btn">Cancelar</button>
+                <button type="button" class="btn" data-dismiss="modal" >Aceptar</button>
+                <button type="button" class="btn" class="close" data-dismiss="modal" aria-label="Close">Cancelar</button>
               </div>
             </div>
           </div>
         </div>
-    
+
+          <!-- MODAL DE REGISTRAR-->
+        <div class="modal fade" id="ModalRegistrar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">CREAR CUENTA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">X</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <table>
+                    <tr>
+                        <td>Usuario:</td>
+                        <td><input type="text" id="usuarioLabel" class="form-control" placeholder="Ingrese su usuario"></td>
+                    </tr>
+                    <tr>
+                        <td>Correo:</td>
+                        <td><input type="text" id="correoLabel" class="form-control" placeholder="Ingrese su correo"></td>
+                    </tr>
+                    <tr>
+                        <td>Clave:</td>
+                        <td><input type="password" id="claveLabel" class="form-control" placeholder="Ingrese su clave"></td>
+                    </tr>
+                    <tr>
+                        <td>Verficar clave: &nbsp&nbsp</td>
+                        <td><input type="password" id="vclaveLabel" class="form-control" placeholder="Ingrese su clave"></td>
+                    </tr>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal"
+                    href="javascript:;" onclick="registrar();return false;" value="aceptar" >Aceptar</button>
+                <button type="button" class="btn" class="close" data-dismiss="modal" aria-label="Close">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
   </header>
   <!-- #header -->
 
@@ -186,7 +254,7 @@
       </h2>
 
     <p>
-      This is the most powerful theme with thousands of options that you have never seen before.
+      <!--añadir una descripcion pequeña max 1 linea-->
     </p>
     <img alt="Bell - A perfect theme" class="gadgets-img hidden-md-down" src="img/gadgets.png">
   </div>
@@ -199,11 +267,11 @@
   <section class="portfolio" id="portfolio">
     <div class="container text-center">
       <h2>
-          Portafolio de Desarrollo
+          Portafolio del Juego
         </h2>
 
       <p>
-        Voluptua scripserit per ad, laudem viderer sit ex. Ex alia corrumpit voluptatibus usu, sed unum convenire id. Ut cum nisl moderatius, Per nihil dicant commodo an.
+        Ven conoce nuestro juego con divertidas preguntas donde pondrás a prueba tu conocimiento.
       </p>
     </div>
 
