@@ -37,15 +37,10 @@
   <!-- Main Stylesheet File -->
   <link href="css/style.css" rel="stylesheet">
 
-  <!-- =======================================================
-    Theme Name: Bell
-    Theme URL: https://bootstrapmade.com/bell-free-bootstrap-4-template/
-    Author: BootstrapMade.com
-    Author URL: https://bootstrapmade.com
-  ======================================================= -->
 
   <script type="text/javascript" src="js/jquery.js"></script>
   <script type="text/javascript" src="js/lib.jquery.json-2.3.min.js"></script>
+  <!--registrar usuario-->
   <script>
     function registrar()
     {
@@ -72,12 +67,51 @@
         };
     }
   </script>
+  <!--logear-->
+  <script>
+  verSiLogin();
+  function login()
+  {
+    var correo = $("#usuarioLabel").val();
+    var clave = $("#contrasenaLabel").val();
+    if (correo != '' && clave != '') 
+    {
+        var datos = JSON.stringify({"correo": correo, "clave":clave});
+        $.ajax({
+          data: datos, 
+                type:  'POST',
+                url:   'http://localhost/Juego/public/index.php/login',
+                
+                dataType: 'json',
+                
+             success: function (data, textStatus, jqXHR) {
+              if (data["token"]) {
+                sessionStorage["token"] = data ["token"];
+                    sessionStorage["nombre"] = data ["nombre"];
+                    //sessionStorage["nombre"] = data ["nombre"];
+                    document.location.href= "usuario.html";
+              }else{
+                alert("error");
+              }
+                    
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error p");
+                }
+              
+                });
+    }
+  }
+
+  function verSiLogin(){
+      if (sessionStorage["token"]) {
+        document.location.href ="usuario.html";
+      }
+     }
+  </script>
 </head>
 
 <body>
-  <!-- Page Content
-    ================================================== -->
-  <!-- Hero -->
+
 
   <section class="hero">
     <div class="container text-center">
@@ -141,17 +175,17 @@
               <div class="modal-body">
                 <table>
                     <tr>
-                        <td>Usuario:</td>
-                        <td><input type="text" class="form-control" placeholder="Ingrese su Usuario"></td>
+                        <td>Correo:</td>
+                        <td><input type="text" id="usuarioLabel" class="form-control" placeholder="Ingrese su Correo"></td>
                     </tr>
                     <tr>
                         <td>Contraseña:</td>
-                        <td><input type="text" class="form-control" placeholder="Ingrese su Contraseña"></td>
+                        <td><input type="text"  id="contrasenaLabel" class="form-control" placeholder="Ingrese su Contraseña"></td>
                     </tr>
                 </table>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn" data-dismiss="modal" >Aceptar</button>
+                <button type="button" class="btn" data-dismiss="modal"  href="javascript:;" onclick="login();return false;" >Aceptar</button>
                 <button type="button" class="btn" class="close" data-dismiss="modal" aria-label="Close">Cancelar</button>
               </div>
             </div>
