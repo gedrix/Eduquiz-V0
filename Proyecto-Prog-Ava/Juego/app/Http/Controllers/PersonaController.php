@@ -20,10 +20,12 @@ class PersonaController extends Controller
                 $data = $request->json()->all();//transformamos la data a json
                 $persona = Persona::find($personObj->id);
                 if (isset($data["nombre"])) {
-                    $persona->nombre = $data["nombre"];
+                    if($data["nombre"] != "")
+                        $persona->nombre = $data["nombre"];
                 }
                 if (isset($data["clave"])) {
-                    $persona->clave = $data["clave"];
+                    if($data["clave"] != "")
+                        $persona->clave = $data["clave"];
                 }
                 $persona->save();
                 return response()->json(["mensaje"=>"Operacion existosa", "siglas"=>"OE"], 200);
