@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 /**
@@ -39,6 +38,7 @@ class PersonaController extends Controller
     *   Registro de usuarios
     */
     public function Registrar(Request $request){
+        header('Content-Type: text/html; charset=UTF-8');
         if ($request->json()) {
             $data = $request->json()->all();
             $persona = Persona::where("correo", $data["correo"])->first();
@@ -52,7 +52,7 @@ class PersonaController extends Controller
                     $persona->external_id = Utilidades\UUID::v4();
                     $persona->save();
                     //retardo la ejecucion para que termine de ejecutar la sentencia en la base de datos
-                    sleep(1);//retraso de 1 segundo
+                    //sleep(1);//retraso de 1 segundo
                     //buscar el mismo usuario creado y almaceno la demas info del jugador
                     $nivel_user = new Nivel_Usuario();
                     $nivel_user->nivel = 1;
@@ -61,7 +61,7 @@ class PersonaController extends Controller
                     $nivel_user->puntaje = 0;
                     $nivel_user->Persona()->associate($persona);//asocio las tablas relacionadas
                     $nivel_user->save();
-                    return response()->json(["mensaje"=>"Operacion existosa", "siglas"=>"OE"], 200);
+                    return response()->json(["mensaje"=>"Operacion existosa", "nombre"=>$data["nombre"], "siglas"=>"OE"], 200);
                 }else{
                     return response()->json(["mensaje"=>"Faltan datos en formulario", "siglas"=>"FDEF"], 203);
                 }
