@@ -163,74 +163,6 @@
     </div>
     
             <!-- Modal logear -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">INICIO DE SESIÓN</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">X</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <table>
-                    <tr>
-                        <td>Correo:</td>
-                        <td><input type="text" id="usuarioLabel" class="form-control" placeholder="Ingrese su Correo"></td>
-                    </tr>
-                    <tr>
-                        <td>Contraseña:</td>
-                        <td><input type="text"  id="contrasenaLabel" class="form-control" placeholder="Ingrese su Contraseña"></td>
-                    </tr>
-                </table>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn" data-dismiss="modal"  href="javascript:;" onclick="login();return false;" >Aceptar</button>
-                <button type="button" class="btn" class="close" data-dismiss="modal" aria-label="Close">Cancelar</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-          <!-- MODAL DE REGISTRAR-->
-        <div class="modal fade" id="ModalRegistrar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">CREAR CUENTA</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">X</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <table>
-                    <tr>
-                        <td>Usuario:</td>
-                        <td><input type="text" id="usuarioLabel" class="form-control" placeholder="Ingrese su usuario"></td>
-                    </tr>
-                    <tr>
-                        <td>Correo:</td>
-                        <td><input type="text" id="correoLabel" class="form-control" placeholder="Ingrese su correo"></td>
-                    </tr>
-                    <tr>
-                        <td>Clave:</td>
-                        <td><input type="password" id="claveLabel" class="form-control" placeholder="Ingrese su clave"></td>
-                    </tr>
-                    <tr>
-                        <td>Verficar clave: &nbsp&nbsp</td>
-                        <td><input type="password" id="vclaveLabel" class="form-control" placeholder="Ingrese su clave"></td>
-                    </tr>
-                </table>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn" data-dismiss="modal"
-                    href="javascript:;" onclick="registrar();return false;" value="aceptar" >Aceptar</button>
-                <button type="button" class="btn" class="close" data-dismiss="modal" aria-label="Close">Cancelar</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
   </header>
   <!-- #header -->
 
@@ -599,6 +531,75 @@
 
       </div>
     </div>
+    
+       <!-- Modal -->
+        <div class="modal fade" id="ModalLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">INICIO DE SESIÓN</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">X</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <table>
+                    <tr>
+                        <td>Usuario:</td>
+                        <td><input type="text" class="form-control" placeholder="Ingrese su Usuario"></td>
+                    </tr>
+                    <tr>
+                        <td>Contraseña:</td>
+                        <td><input type="text" class="form-control" placeholder="Ingrese su Contraseña"></td>
+                    </tr>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Aceptar</button>
+                <button type="button" class="btn">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+        <!-- Modal -->
+        <div class="modal fade" id="ModalRegistar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">CREA UNA NUEVA CUENTA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">X</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <table>
+                    <tr>
+                        <td>Usuario:</td>
+                        <td><input type="text" class="form-control" placeholder="Ingrese su Usuario"></td>
+                    </tr>
+                    <tr>
+                        <td>Correo:</td>
+                        <td><input type="text" class="form-control" placeholder="Ingrese su Usuario"></td>
+                    </tr>
+                    <tr>
+                        <td>Contraseña:</td>
+                        <td><input type="password" class="form-control" placeholder="Ingrese su Contraseña"></td>
+                    </tr>
+                    <tr>
+                        <td>Repetir Contraseña:</td>
+                        <td><input type="password" class="form-control" placeholder="Ingrese su Usuario"></td>
+                    </tr>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Aceptar</button>
+                <button type="button" class="btn">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
   </section>
 
   <footer class="site-footer">
