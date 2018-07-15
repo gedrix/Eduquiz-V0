@@ -67,20 +67,49 @@ class PreguntaController extends Controller
         }
     }
 
-    //NOTA:     Este codigo se puede optimizar las consultas en solo uno o dos whereHas...
-    public function obtenerPreguntaRamdon(Request $request){
+    public function obtenerPreguntasRamdon(Request $request){
         if ($request->json()) {
             try {
                 $data = $request->json()->all();//transformamos la data a json
-                $pregunta = Pregunta::where("dificultad", $data["dificultad"])
+                $listaPreguntas = Pregunta::where("dificultad", $data["dificultad"])
                         ->where("estado", 1)
-                        ->orderByRaw("RAND()")->first();
+                        ->orderByRaw("RAND()")
+                        ->take($data["cantidad"])->get();//obtiene N preguntas aleatorias
+                if ($listaPreguntas) {
+                    $dataIds = array();
+                    $dataPreguntas = array();
+                    $dataDificultad = array();
+                    foreach ($listaPreguntas as $pregunta) {
+                        $dataIds[] = $pregunta->id;
+                        $dataPreguntas[] = $pregunta->pregunta; 
+                        $dataDificultad[] = $pregunta->dificultad;
+                    }
+                    
+                    return response()->json(["ids"=>$dataIds,
+                        "preguntas"=>$dataPreguntas,
+                        "dificultad"=>$dataDificultad,
+                        "mensaje"=>"Operacion existosa"], 200);
+                }else{
+                    return response()->json(["mensaje"=>"No se ha encontrado ningun dato", "siglas"=>"NDE"], 203);
+                }
+            } catch (\Exception $exc) {
+                return response()->json(["mensaje"=>"Faltan datos", "siglas"=>"FD"], 400);
+            }
+        }else{
+            return response()->json(["mensaje"=>"La data no tiene el formato deseado", "siglas"=>"DNF"], 400);
+        }
+    }
+    public function obtenerOpcionesPorIdPregunta(Request $request){
+        if ($request->json()) {
+            try {
+                $data = $request->json()->all();//transformamos la data a json
+                $pregunta = Pregunta::where("id", $data["id"])->first();
                 if ($pregunta) {
+                    //OPTIMIZAR: esto puede reducirse a un JOIN... 
                     $listaOpciones = Opcion::where("id_pregunta", $pregunta->id)->get();
                     $listaCategoria = Preg_Cate::where("id_pregunta", $pregunta->id)->get();
-                    /*$listaCategoria = Categoria::whereHas('Preg_Cate', function($q){
-                        $q->where('id_categoria', $idCategoria);
-                    })->first();*/
+                    $persona = Persona::where("id", $pregunta->id_persona)->first();
+
                     $dataOpciones = array();
                     $dataOpcionEstado = array();
                     $dataCategoria = array();
@@ -92,10 +121,11 @@ class PreguntaController extends Controller
                         $cat = Categoria::where("id", $item->id_categoria)->first();
                         $dataCategoria[] = $cat->nombre;
                     }
-                    return response()->json(["pregunta"=>$pregunta->pregunta,
-                        "dificultad"=>$pregunta->dificultad, "categoria"=>$dataCategoria, 
+                    return response()->json(["id"=>$pregunta->id,
                         "opcion"=>$dataOpciones,
                         "opcionEstado"=>$dataOpcionEstado,
+                        "categoria"=>$dataCategoria,
+                        "creadaPor"=>$persona->nombre,
                         "mensaje"=>"Operacion existosa"], 200);
                 }else{
                     return response()->json(["mensaje"=>"No se ha encontrado ningun dato", "siglas"=>"NDE"], 203);
