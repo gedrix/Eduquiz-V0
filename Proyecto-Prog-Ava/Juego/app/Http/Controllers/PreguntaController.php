@@ -67,20 +67,49 @@ class PreguntaController extends Controller
         }
     }
 
-    //NOTA:     Este codigo se puede optimizar las consultas en solo uno o dos whereHas...
-    public function obtenerPreguntaRamdon(Request $request){
+    public function obtenerPreguntasRamdon(Request $request){
         if ($request->json()) {
             try {
                 $data = $request->json()->all();//transformamos la data a json
-                $pregunta = Pregunta::where("dificultad", $data["dificultad"])
+                $listaPreguntas = Pregunta::where("dificultad", $data["dificultad"])
                         ->where("estado", 1)
-                        ->orderByRaw("RAND()")->first();
+                        ->orderByRaw("RAND()")
+                        ->take($data["cantidad"])->get();//obtiene N preguntas aleatorias
+                if ($listaPreguntas) {
+                    $dataIds = array();
+                    $dataPreguntas = array();
+                    $dataDificultad = array();
+                    foreach ($listaPreguntas as $pregunta) {
+                        $dataIds[] = $pregunta->id;
+                        $dataPreguntas[] = $pregunta->pregunta; 
+                        $dataDificultad[] = $pregunta->dificultad;
+                    }
+                    
+                    return response()->json(["ids"=>$dataIds,
+                        "preguntas"=>$dataPreguntas,
+                        "dificultad"=>$dataDificultad,
+                        "mensaje"=>"Operacion existosa"], 200);
+                }else{
+                    return response()->json(["mensaje"=>"No se ha encontrado ningun dato", "siglas"=>"NDE"], 203);
+                }
+            } catch (\Exception $exc) {
+                return response()->json(["mensaje"=>"Faltan datos", "siglas"=>"FD"], 400);
+            }
+        }else{
+            return response()->json(["mensaje"=>"La data no tiene el formato deseado", "siglas"=>"DNF"], 400);
+        }
+    }
+    public function obtenerOpcionesPorIdPregunta(Request $request){
+        if ($request->json()) {
+            try {
+                $data = $request->json()->all();//transformamos la data a json
+                $pregunta = Pregunta::where("id", $data["id"])->first();
                 if ($pregunta) {
+                    //OPTIMIZAR: esto puede reducirse a un JOIN... 
                     $listaOpciones = Opcion::where("id_pregunta", $pregunta->id)->get();
                     $listaCategoria = Preg_Cate::where("id_pregunta", $pregunta->id)->get();
-                    /*$listaCategoria = Categoria::whereHas('Preg_Cate', function($q){
-                        $q->where('id_categoria', $idCategoria);
-                    })->first();*/
+                    $persona = Persona::where("id", $pregunta->id_persona)->first();
+
                     $dataOpciones = array();
                     $dataOpcionEstado = array();
                     $dataCategoria = array();
@@ -92,10 +121,11 @@ class PreguntaController extends Controller
                         $cat = Categoria::where("id", $item->id_categoria)->first();
                         $dataCategoria[] = $cat->nombre;
                     }
-                    return response()->json(["pregunta"=>$pregunta->pregunta,
-                        "dificultad"=>$pregunta->dificultad, "categoria"=>$dataCategoria, 
+                    return response()->json(["id"=>$pregunta->id,
                         "opcion"=>$dataOpciones,
                         "opcionEstado"=>$dataOpcionEstado,
+                        "categoria"=>$dataCategoria,
+                        "creadaPor"=>$persona->nombre,
                         "mensaje"=>"Operacion existosa"], 200);
                 }else{
                     return response()->json(["mensaje"=>"No se ha encontrado ningun dato", "siglas"=>"NDE"], 203);
@@ -106,5 +136,83 @@ class PreguntaController extends Controller
         }else{
             return response()->json(["mensaje"=>"La data no tiene el formato deseado", "siglas"=>"DNF"], 400);
         }
+    }
+    public function ListaPreguntasSugueridas($external_id)
+    {
+        $personObj = Persona::where("external_id", $external_id)->first();
+        if ($personObj) {
+          // return response()->json(["id"=>$personObj->id,
+          //  "nombre"=>$personObj->nombre
+          //  ],200);
+          $lista = Pregunta::where('id_persona','=',$personObj->id)
+          ->join('Preg_Cate', 'Pregunta.id','=','Preg_Cate.id_pregunta')
+          ->join('Categoria', 'Preg_Cate.id_categoria', '=' ,'Categoria.id')
+          ->orderBy('created_at','des')
+          ->get();
+          foreach ($lista as $item) {
+              $data[]=["pregunta"=>$item->pregunta,
+                       "nivel"=>$item->dificultad,
+                       "categoria"=>$item->nombre
+                       ];
+          }
+         return response()->json($data,200);
+        }else{
+            return response()->json(["mensaje"=>"No se ha encontrado ningun dato", "siglas"=>"NDE"], 203);
+        }
+    }
+    
+    public function UltimasPreguntasIngresadas(){
+        $lista = Pregunta:: where('estado','=',1)
+                 ->join('Preg_Cate', 'Pregunta.id','=','Preg_Cate.id_pregunta')
+                 ->join('Categoria', 'Preg_Cate.id_categoria', '=' ,'Categoria.id')
+                 ->orderBy('created_at','des')
+                 ->take(10)
+                 ->get();
+        foreach ($lista as $item) {
+          $data[]=["pregunta"=>$item->pregunta,
+                   "nivel"=>$item->dificultad,
+                   "categoria"=>$item->nombre
+                  ];
+          }
+         return response()->json($data,200);
+    }
+    
+
+    public function listarPreguntasCatyDifi($dificultad,$categoria){
+        $lista = Pregunta:: where('Pregunta.dificultad','=',$dificultad)
+                            ->where('Categoria.nombre','=',$categoria)
+                 ->join('Preg_Cate', 'Pregunta.id','=','Preg_Cate.id_pregunta')
+                 ->join('Categoria', 'Preg_Cate.id_categoria', '=' ,'Categoria.id')
+                 
+                 ->get();
+        foreach ($lista as $item) {
+          $data[]=["pregunta"=>$item->pregunta,
+                   "nivel"=>$item->dificultad,
+                   "categoria"=>$item->nombre                   
+                  ];
+          }
+         return response()->json($data,200);
+    }
+
+    public function ListaPreguntasSugueridasAceptar(){
+        $lista = Pregunta::where('Pregunta.estado','=',0)
+                 ->join('Persona','Pregunta.id_persona','=','Persona.id')
+                 ->join('Preg_Cate', 'Pregunta.id','=','Preg_Cate.id_pregunta')
+                 ->join('Categoria', 'Preg_Cate.id_categoria', '=' ,'Categoria.id')
+                 ->join('Opcion','Pregunta.id','=','Opcion.id_pregunta')
+                 ->get();
+        foreach ($lista as $item) {
+            $data[]= [ "usuario"=>$item->Persona->nombre,
+                       "pregunta"=>$item->pregunta,
+                       "nivel"=>$item->dificultad,
+                       
+                       "categoria"=>$item->nombre,
+                       "opcion"=>$item->opcion,
+                       "Repuesta"=>$item->estado
+
+                     ];
+             }
+            return response()->json($data,200);
+       
     }
 }

@@ -20,10 +20,12 @@ class PersonaController extends Controller
                 $data = $request->json()->all();//transformamos la data a json
                 $persona = Persona::find($personObj->id);
                 if (isset($data["nombre"])) {
-                    $persona->nombre = $data["nombre"];
+                    if($data["nombre"] != "")
+                        $persona->nombre = $data["nombre"];
                 }
                 if (isset($data["clave"])) {
-                    $persona->clave = $data["clave"];
+                    if($data["clave"] != "")
+                        $persona->clave = $data["clave"];
                 }
                 $persona->save();
                 return response()->json(["mensaje"=>"Operacion existosa", "siglas"=>"OE"], 200);
@@ -52,7 +54,7 @@ class PersonaController extends Controller
                     $persona->external_id = Utilidades\UUID::v4();
                     $persona->save();
                     //retardo la ejecucion para que termine de ejecutar la sentencia en la base de datos
-                    //sleep(1);//retraso de 1 segundo
+                    sleep(1);//retraso de 1 segundo
                     //buscar el mismo usuario creado y almaceno la demas info del jugador
                     $nivel_user = new Nivel_Usuario();
                     $nivel_user->nivel = 1;
@@ -137,6 +139,23 @@ class PersonaController extends Controller
             }else{
                 return response()->json(["mensaje"=>"La data no tiene el formato deseado", "siglas"=>"DNF"], 400);
             }
+        }else{
+            return response()->json(["mensaje"=>"No se ha encontrado ningun dato", "siglas"=>"NDE"], 203);
+        }
+    }
+    public function DatosPerfil($external_id)
+    {
+        $personObj = Persona::where("external_id", $external_id)->first();
+        if ($personObj) {
+            $lista= Persona::where('external_id','=',$external_id)
+                    ->join('Nivel_Usuario','Persona.id','=','Nivel_Usuario.id_persona')
+            ->get();
+            foreach ($lista as $item) {
+                $data[]=["nombre"=>$item->nombre,
+                         "nivel"=>$item->nivel,
+                          "experiencia"=>$item->experiencia];
+            }
+            return response()->json($data,200);
         }else{
             return response()->json(["mensaje"=>"No se ha encontrado ningun dato", "siglas"=>"NDE"], 203);
         }

@@ -1,7 +1,4 @@
-﻿CREATE DATABASE  IF NOT EXISTS `eduquiz` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `eduquiz`;
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
---
+﻿--
 -- Host: 127.0.0.1    Database: eduquiz
 -- ------------------------------------------------------
 -- Server version	5.5.5-10.1.30-MariaDB

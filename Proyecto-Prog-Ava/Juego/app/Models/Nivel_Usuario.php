@@ -12,7 +12,7 @@ class Nivel_Usuario extends Model{
     protected $guarded = ['id'];
     
     //Relacion PERNECE A
-    public function Pregunta(){
+    public function Persona(){
         return $this->belongsTo('App\Models\Persona', 'id_persona');
     }
 }
