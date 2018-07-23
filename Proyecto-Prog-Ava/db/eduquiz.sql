@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 CREATE DATABASE  IF NOT EXISTS `eduquiz` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `eduquiz`;
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: eduquiza-mysqldbserver.mysql.database.azure.com    Database: eduquiz
+=======
+﻿--
+-- Host: 127.0.0.1    Database: eduquiz
+>>>>>>> 3552a417705acd974e26c17b2779d8b1edfaa0e8
 -- ------------------------------------------------------
 -- Server version	5.6.39.0
 

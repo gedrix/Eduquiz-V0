@@ -26,11 +26,20 @@ $router->post('/usuario/editar/{external_id}', 'PersonaController@Modificar');
 $router->post('/login', 'PersonaController@Login');
 $router->post('/usuario/registro', 'PersonaController@Registrar');
 $router->post('/usuario/actualizarinfo/{external_id}', 'PersonaController@ActualizarNivelUsuario');
-
+$router->post('/usuario/datos/{external_id}', 'PersonaController@DatosPerfil');
 //preguntas
-$router->post('/preguntas/ramdon', 'PreguntaController@obtenerPreguntaRamdon');
+$router->post('/preguntas/ramdon', 'PreguntaController@obtenerPreguntasRamdon');
 $router->post('/preguntas/registro/{external_id}', 'PreguntaController@registrar');
+$router->post('/preguntas/obtenerPreguntaId', 'PreguntaController@obtenerOpcionesPorIdPregunta');
+$router->post('/preguntas/listarPorUser/{external_id}', 'PreguntaController@ListaPreguntasSugueridas');
+$router->get('/preguntas/ultimas','PreguntaController@UltimasPreguntasIngresadas');
+$router->post('/preguntas/listarPreguntas/{dificultad}/{categoria}','PreguntaController@listarPreguntasCatyDifi');
+$router->get('/preguntas/SugueridasAceptar','PreguntaController@ListaPreguntasSugueridasAceptar');
 
 //categoriaController
-$router->post('/usuario/registroCategoria', 'CategoriaController@Registrar');
-$router->post('/usuario/editarCategoria/{external_id}', 'CategoriaController@EditarCategoria');
+$router->post('/categoria/registroCategoria', 'CategoriaController@Registrar');
+$router->post('/categoria/editarCategoria/{external_id}', 'CategoriaController@EditarCategoria');
+$router->get('/categoria/listarCategoria', 'CategoriaController@ListarCategoria');
+
+//nivelUsuarioController
+$router->get('/usuario/listar', 'nivelUsuarioController@listar');

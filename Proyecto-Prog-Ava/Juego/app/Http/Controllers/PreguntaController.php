@@ -137,4 +137,82 @@ class PreguntaController extends Controller
             return response()->json(["mensaje"=>"La data no tiene el formato deseado", "siglas"=>"DNF"], 400);
         }
     }
+    public function ListaPreguntasSugueridas($external_id)
+    {
+        $personObj = Persona::where("external_id", $external_id)->first();
+        if ($personObj) {
+          // return response()->json(["id"=>$personObj->id,
+          //  "nombre"=>$personObj->nombre
+          //  ],200);
+          $lista = Pregunta::where('id_persona','=',$personObj->id)
+          ->join('Preg_Cate', 'Pregunta.id','=','Preg_Cate.id_pregunta')
+          ->join('Categoria', 'Preg_Cate.id_categoria', '=' ,'Categoria.id')
+          ->orderBy('created_at','des')
+          ->get();
+          foreach ($lista as $item) {
+              $data[]=["pregunta"=>$item->pregunta,
+                       "nivel"=>$item->dificultad,
+                       "categoria"=>$item->nombre
+                       ];
+          }
+         return response()->json($data,200);
+        }else{
+            return response()->json(["mensaje"=>"No se ha encontrado ningun dato", "siglas"=>"NDE"], 203);
+        }
+    }
+    
+    public function UltimasPreguntasIngresadas(){
+        $lista = Pregunta:: where('estado','=',1)
+                 ->join('Preg_Cate', 'Pregunta.id','=','Preg_Cate.id_pregunta')
+                 ->join('Categoria', 'Preg_Cate.id_categoria', '=' ,'Categoria.id')
+                 ->orderBy('created_at','des')
+                 ->take(10)
+                 ->get();
+        foreach ($lista as $item) {
+          $data[]=["pregunta"=>$item->pregunta,
+                   "nivel"=>$item->dificultad,
+                   "categoria"=>$item->nombre
+                  ];
+          }
+         return response()->json($data,200);
+    }
+    
+
+    public function listarPreguntasCatyDifi($dificultad,$categoria){
+        $lista = Pregunta:: where('Pregunta.dificultad','=',$dificultad)
+                            ->where('Categoria.nombre','=',$categoria)
+                 ->join('Preg_Cate', 'Pregunta.id','=','Preg_Cate.id_pregunta')
+                 ->join('Categoria', 'Preg_Cate.id_categoria', '=' ,'Categoria.id')
+                 
+                 ->get();
+        foreach ($lista as $item) {
+          $data[]=["pregunta"=>$item->pregunta,
+                   "nivel"=>$item->dificultad,
+                   "categoria"=>$item->nombre                   
+                  ];
+          }
+         return response()->json($data,200);
+    }
+
+    public function ListaPreguntasSugueridasAceptar(){
+        $lista = Pregunta::where('Pregunta.estado','=',0)
+                 ->join('Persona','Pregunta.id_persona','=','Persona.id')
+                 ->join('Preg_Cate', 'Pregunta.id','=','Preg_Cate.id_pregunta')
+                 ->join('Categoria', 'Preg_Cate.id_categoria', '=' ,'Categoria.id')
+                 ->join('Opcion','Pregunta.id','=','Opcion.id_pregunta')
+                 ->get();
+        foreach ($lista as $item) {
+            $data[]= [ "usuario"=>$item->Persona->nombre,
+                       "pregunta"=>$item->pregunta,
+                       "nivel"=>$item->dificultad,
+                       
+                       "categoria"=>$item->nombre,
+                       "opcion"=>$item->opcion,
+                       "Repuesta"=>$item->estado
+
+                     ];
+             }
+            return response()->json($data,200);
+       
+    }
 }

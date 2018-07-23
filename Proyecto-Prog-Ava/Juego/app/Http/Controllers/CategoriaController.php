@@ -61,4 +61,15 @@ class CategoriaController extends Controller
         }
 
 	}
+
+	public function ListarCategoria(){
+		$lista =Categoria::
+		        //->orderBy('id')
+			    get();
+		foreach ($lista as $item) {
+			$data[]=["categoria"=>$item->nombre ] ;
+		}
+		return response()->json($data,200);
+	}
+	
 }
