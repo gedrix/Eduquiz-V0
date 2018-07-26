@@ -14,6 +14,5 @@ public class Persona
 	//info del juego
 	public int nivel = 1;
 	public int experiencia = 0;
-	public int clasificacion = 0;
 	public int puntaje = 0;
 }

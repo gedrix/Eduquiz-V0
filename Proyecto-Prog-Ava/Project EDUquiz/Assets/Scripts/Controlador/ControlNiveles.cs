@@ -57,7 +57,6 @@ public class ControlNiveles {
 				} else
 					infoPuntaje[1] = 0; //punto (clasificacion)
 				return infoPuntaje;
-				break;
 			case "Normal":
 				if (nivel <= 5) //facil
 					infoPuntaje[0] = 10;
@@ -76,7 +75,6 @@ public class ControlNiveles {
 				} else
 					infoPuntaje[1] = 0; //punto (clasificacion)
 				return infoPuntaje;
-				break;
 			case "Dificil":
 				if (nivel <= 5) //facil
 					infoPuntaje[0] = 10;
@@ -95,7 +93,6 @@ public class ControlNiveles {
 				} else
 					infoPuntaje[1] = 0; //punto (clasificacion)
 				return infoPuntaje;
-				break;
 			case "Muy Dificil":
 				if (nivel <= 5) //facil
 					infoPuntaje[0] = 10;
@@ -109,7 +106,6 @@ public class ControlNiveles {
 					infoPuntaje[0] = 8;
 				infoPuntaje[1] = 1; //punto (clasificacion)
 				return infoPuntaje;
-				break;
 			case "Maestro":
 				infoPuntaje[0] = 10;
 				infoPuntaje[1] = 1; //punto (clasificacion)

@@ -74,7 +74,11 @@ public class GameController : MonoBehaviour {
 	ControlNiveles controlNiveles = new ControlNiveles ();
 	private List<Pregunta> listaPreguntas;
 	private List<int> listaAcertadas = new List<int> (); //almacena los id's de las preguntas correctas
+	//referencia a otros scripts con Monobehaviour
+	ControlClasificacion controlClasificacion;
 	void Awake () {
+		//referencia a componentes
+		controlClasificacion = FindObjectOfType<ControlClasificacion>();//busca y obtiene el componente
 		//esta linea al parecer no funca en movil...
 		Application.runInBackground = true; //la aplicacion se mantiene ejecutando en segundo plano (por los timers)
 		btnCancelarCarga.SetActive (false); //inabilito el boton hasta ser llamado...
@@ -181,6 +185,7 @@ public class GameController : MonoBehaviour {
 		desactivarTodosCanvas ();
 
 		ui_clasificacion.enabled = true;
+		controlClasificacion.obtenerListaClasificacion(objPersona.token);
 	}
 	private void desactivarTodosCanvas () {
 		ui_game.enabled = false;
