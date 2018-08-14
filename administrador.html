@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Admin</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <!-- Facebook Opengraph integration: https://developers.facebook.com/docs/sharing/opengraph -->
+  <meta property="og:title" content="">
+  <meta property="og:image" content="">
+  <meta property="og:url" content="">
+  <meta property="og:site_name" content="">
+  <meta property="og:description" content="">
+
+  <!-- Twitter Cards integration: https://dev.twitter.com/cards/  -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="">
+  <meta name="twitter:title" content="">
+  <meta name="twitter:description" content="">
+  <meta name="twitter:image" content="">
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+  <!-- Favicon -->
+  <link href="img/favicon.ico" rel="icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,700|Roboto:400,900" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href="css/style.css" rel="stylesheet">
+
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/lib.jquery.json-2.3.min.js"></script>
+
+       <script>
+       verificar();
+       function verificar(){
+         if (sessionStorage["token"]==null) {
+              document.location.href= "index.html";
+         }
+       }
+        function registrarPregunta(){
+            var pregunta = $("#txtPregunta").val();
+            var cate = $("#txtCategoria").val();
+            //var categSeleccionada = this.options
+            var categoria =[cate];
+
+            var dificultad = $("#txtNivel").val();
+
+            var correcta = $("#txtCorrecta").val();
+            var opcion1 = $("#txtOpcion1").val();
+            var opcion2 = $("#txtOpcion2").val();
+            var opcion3 = $("#txtOpcion3").val();
+            var opcion = [correcta, opcion1, opcion2, opcion3];
+
+            var external = sessionStorage["external"];
+          $.ajax({
+                data: JSON.stringify({"pregunta": pregunta, "dificultad":dificultad, "categoria":categoria,
+                                       "opcion":opcion}),
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/registro/'+external,
+
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+              alert(data["mensaje"]);
+                 $("#txtPregunta").val("");
+                 $("#txtCorrecta").val("");
+                 $("#txtOpcion1").val(""); ////PROBAR y subir
+                 $("#txtOpcion2").val("");
+                 $("#txtOpcion3").val("");
+
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error p");
+                }
+             });
+            //alert(categoria);
+        }
+
+        function listarPreg(){
+            var categoria = $("#buscarCategoria").val();
+            var dificultad = $("#buscarNivel").val();
+            alert(sessionStorage["token"]); ///quitarlo del internet, pedir a gedo que envie el external al listar
+            $.ajax({
+
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                data: JSON.stringify({"dificultad": dificultad, "categoria":categoria}),
+                url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/listarPreguntas/'+dificultad+'/'+categoria,
+
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+                 var html = "";
+                    $.each(data, function (index, item) {
+                       html += "<tr>";
+                       //html += "<td>" + (index + 1) + "</td>";//contador
+                       html += "<td>" + item["pregunta"] + "</td>";
+                       html += "<td>" + item["nivel"] + "</td>";
+                       html += "<td>" + item["categoria"] + "</td>";
+                       html += "<td><button class='btn2' type='submit'>Editar</button></td>";
+                       html += "</tr>";
+                    });
+                    $("#tabla_tbody").html(html);
+
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error p");
+                }
+             });
+            //alert(categoria);
+        }
+
+        function registrarCategoria(){
+          var nombreCateg = $("#txtNombCateg").val();
+          alert(nombreCateg);
+          //var imagenCateg = $("#txtImagenCateg").val();
+          $.ajax({
+                data: JSON.stringify({"nombre": nombreCateg}),
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                url:   'https://eduquiza.azurewebsites.net/public/index.php/categoria/registroCategoria',
+
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+              alert(data["mensaje"]);
+              var nombreCateg = $("#txtNombCateg").val("");
+              //var imagenCateg = $("#txtImagenCateg").val("");
+
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error p");
+                }
+             });
+        }
+
+
+       function cerrarSesion(){
+          sessionStorage.clear();
+          document.location.href= "index.html";
+      }
+    </script>
+</head>
+
+<body>
+  <!-- Page Content
+    ================================================== -->
+  <!-- Hero -->
+
+  <section class="hero">
+    <div class="container text-center">
+      <div class="row">
+        <div class="col-md-12">
+          <a class="hero-brand" href="index.html" title="Home"><img alt="Bell Logo" src="img/logo.png"></a>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <h1>
+            EDUQUIZ
+          </h1>
+
+        <p class="tagline">
+          Educando gracias a los juegos y a la Tecnología
+        </p>
+        <a class="btn btn-full" href="#about">Inicia esta Aventura</a>
+      </div>
+    </div>
+
+  </section>
+  <!-- /Hero -->
+
+  <!-- Header -->
+  <header id="header">
+    <div class="container">
+
+      <div id="logo" class="pull-left">
+        <a href="index.html"><img src="img/logo-nav.png" alt="" title="" /></a>
+        <!-- Uncomment below if you prefer to use a text image -->
+        <!--<h1><a href="#hero">Bell</a></h1>-->
+      </div>
+
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+          <li><a href="#preguntas">Preguntas</a></li>
+          <li><a href="#features">Categorias</a></li>
+          <li><a href="#portfolio">Revisión Preguntas</a></li>
+            <li><a href="#team">Usuarios</a></li>
+            <li><a href="javascript:;" onclick="cerrarSesion();return false;">Cerrar Sesión</a></li>
+        </ul>
+      </nav>
+      <!-- #nav-menu-container -->
+
+    </div>
+
+  </header>
+  <!-- #header -->
+
+  <!-- About -->
+
+  <section class="about" id="preguntas">
+    <div class="container text-center">
+     <!--<div class="text-center"><button class="btn2" type="submit" href="javascript:;" onclick="cerrarSesion();return false;">Cerrar Sesión</button></div>-->
+      <h2>
+          ADMINISTRACIÓN DE LAS PREGUNTAS
+       </h2>
+        <div class="row">
+            <div class="col-sm-4">
+               <h3>Agregar Pregunta</h3>
+                <table>
+                    <tr>
+                        <td>Pregunta: </td>
+                        <td><input type="text" id="txtPregunta" class="form-control" required></td>
+                    </tr>
+                    <tr>
+                        <td>Dificultad: </td>
+                        <td><select name="txtNivel" id="txtNivel" class="custom-select">
+                            <option value="Facil">Facil</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Dificil">Dificil</option>
+                            <option value="Muy Dificil">Muy Dificil</option>
+                            <option value="Maestro">Maestro</option>
+                        </select></td>
+                    </tr>
+                    <tr>
+                        <td>Categoria: </td>
+                        <td><select name="txtCategoria" id="txtCategoria" class="custom-select">
+                            <option value="Deportes">Deportes</option>
+                            <option value="Ciencia">Ciencia</option>
+                            <option value="Geografia">Geografia</option>
+                            <option value="Historia">Historia</option>
+                            <option value="Musica">Musica</option>
+                            <option value="Matematicas">Matematicas</option>
+                            <option value="Astronomia">Astronomia</option>
+                            <option value="Literatura">Literatura</option>
+                        </select></td>
+
+                    </tr>
+                    <tr>
+                        <td>Correcta: </td>
+                        <td><input type="text" id="txtCorrecta" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Opcion 1: </td>
+                        <td><input type="text" id="txtOpcion1" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Opcion 2: </td>
+                        <td><input type="text" id="txtOpcion2" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Opcion 3: </td>
+                        <td><input type="text" id="txtOpcion3" class="form-control"></td>
+                    </tr>
+                </table>
+                <br>
+                <div class="text-center"><button class="btn" type="submit" href="javascript:;" onclick="registrarPregunta();return false;">INGRESAR</button></div>
+            </div>
+            <div class="col-sm-8">
+              <h4>FILTRAR</h4>
+              <table>
+                  <tr>
+                      <td>Dificultad:</td>
+                      <td><select name="buscarNivel" id="buscarNivel" class="custom-select">
+                            <option value="Facil">Facil</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Dificil">Dificil</option>
+                            <option value="Muy Dificil">Muy Dificil</option>
+                            <option value="Maestro">Maestro</option>
+                        </select></td>
+
+                        <td>Categoria: </td>
+                        <td><select name="buscarCategoria" id="buscarCategoria" class="custom-select">
+                            <option value="Deportes">Deportes</option>
+                            <option value="Ciencia">Ciencia</option>
+                            <option value="Geografia">Geografia</option>
+                            <option value="Historia">Historia</option>
+                            <option value="Musica">Musica</option>
+                            <option value="Matematicas">Matematicas</option>
+                            <option value="Astronomia">Astronomia</option>
+                            <option value="Literatura">Literatura</option>
+                        </select></td>
+                        <td><button class="btn2" type="submit" href="javascript:;" onclick="listarPreg();return false;">BUSCAR</button></td>
+                  </tr>
+              </table>
+
+                <h3>LISTADO DE PREGUNTAS</h3>
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Pregunta</th>
+                            <th>Nivel</th>
+                            <th>Categoria</th>
+                            <th>Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla_tbody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+  </section>
+  <!-- /About -->
+  <!-- Parallax -->
+
+
+  <!-- /Parallax -->
+  <!-- Features -->
+
+  <section class="features" id="features">
+    <div class="container text-center">
+      <h2>
+          ADMINISTRACIÓN DE LAS CATEGORIAS
+       </h2>
+        <div class="row">
+            <div class="col-sm-4">
+               <h3>AGREGAR CATEGORIA</h3>
+                <table>
+                    <tr>
+                        <td>Nonbre: </td>
+                        <td><input type="text" id="txtNombCateg" required></td>
+                    </tr>
+                    <tr>
+                        <td>Imagen: </td>
+                        <td><input type="file" id="txtImagenCateg"></td>
+                    </tr>
+                    <tr>
+                      <td><button type="button" href="javascript:;" onclick="registrarCategoria();return false;" name="regCateg" class="btn">Aceptar</button> </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-8">
+               <h3>LISTADO DE CATEGORIAS</h3>
+                <table>
+                    <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Imagen</th>
+                            <th>Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th>...</th>
+                        <th>...</th>
+                        <th><button class="btn2" type="submit">Editar</button></th>
+                    </tbody>
+                </table>
+                </table>
+            </div>
+        </div>
+      </div>
+  </section>
+  <!-- /Features -->
+
+
+  <!-- Portfolio -->
+
+  <section class="portfolio" id="portfolio">
+    <div class="container text-center">
+      <h2>
+          LISTA DE PREGUNTAS ENVIADAS POR USUARIOS
+      </h2>
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Pregunta</th>
+                            <th>Nivel</th>
+                            <th>Categoria</th>
+                            <th>Correcta</th>
+                            <th>Opcion 1</th>
+                            <th>Opcion 2</th>
+                            <th>Opcion 3</th>
+                            <th>Acpetar</th>
+                            <th>Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th><button class="btn2" type="submit">Aceptar</button></th>
+                        <th><button class="btn2" type="submit">Editar</button></th>
+                    </tbody>
+                </table>
+    </div>
+  </section>
+  <!-- /Portfolio -->
+  <!-- Team -->
+
+  <section class="team" id="team">
+    <center>
+     <div class="container">
+      <h2 class="text-center">
+          Conoce a nuestro equipo de Desarrollo
+        </h2>
+         <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Correo</th>
+                            <th>Estado</th>
+                            <th>Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th>...</th>
+                        <th>...</th>
+                        <th>...</th>
+                        <th><button class="btn2" type="submit">Editar</button></th>
+                    </tbody>
+                </table>
+    </div>
+    </center>
+  </section>
+  <!-- /Team -->
+  <!-- @component: footer -->
+
+  <section id="contact">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h2 class="section-title">Contactanos</h2>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-3 col-md-4">
+          <div class="info">
+            <div>
+              <i class="fa fa-map-marker"></i>
+              <p>Calle Catacocha<br>Loja, Ecuador</p>
+            </div>
+
+            <div>
+              <i class="fa fa-envelope"></i>
+              <p>eduquiz@gmail.com</p>
+            </div>
+
+            <div>
+              <i class="fa fa-phone"></i>
+              <p>+593 0970308263</p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-lg-5 col-md-8">
+          <div class="form">
+            <div id="sendmessage">Your message has been sent. Thank you!</div>
+            <div id="errormessage"></div>
+            <form action="" method="post" role="form" class="contactForm">
+              <div class="form-group">
+                <input type="text" name="name" class="form-control" id="name" placeholder="Tu Nombre" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+                <div class="validation"></div>
+              </div>
+              <div class="form-group">
+                <input type="email" class="form-control" name="email" id="email" placeholder="Tu Correo" data-rule="email" data-msg="Please enter a valid email" />
+                <div class="validation"></div>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" name="subject" id="subject" placeholder="Cabecera" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+                <div class="validation"></div>
+              </div>
+              <div class="form-group">
+                <textarea class="form-control" name="Mensaje" rows="5" data-rule="required" data-msg="Porfavor escribe tus sugerencias" placeholder="Message"></textarea>
+                <div class="validation"></div>
+              </div>
+              <div class="text-center"><button type="submit">Send Message</button></div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="bottom">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-5 col-xs-12 text-lg-left text-center">
+            <p class="copyright-text">
+              © EduQuiz
+            </p>
+            <div class="credits">
+             Designed by Ricardo Esparza
+            </div>
+          </div>
+
+          <div class="col-lg-7 col-xs-12 text-lg-right text-center">
+            <ul class="list-inline">
+              <li class="list-inline-item">
+                <a href="index.html">Home</a>
+              </li>
+
+              <li class="list-inline-item">
+                <a href="#about">Sobre Nosotros</a>
+              </li>
+
+              <li class="list-inline-item">
+                <a href="#features">Caracteristicas</a>
+              </li>
+
+              <li class="list-inline-item">
+                <a href="#portfolio">Portafolio</a>
+              </li>
+
+              <li class="list-inline-item">
+                <a href="#team">Equipo</a>
+              </li>
+
+              <li class="list-inline-item">
+                <a href="#contact">Contactanos</a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </footer>
+  <a class="scrolltop" href="#"><span class="fa fa-angle-up"></span></a>
+
+
+  <!-- Required JavaScript Libraries -->
+  <script src="lib/jquery/jquery.min.js"></script>
+  <script src="lib/jquery/jquery-migrate.min.js"></script>
+  <script src="lib/superfish/hoverIntent.js"></script>
+  <script src="lib/superfish/superfish.min.js"></script>
+  <script src="lib/tether/js/tether.min.js"></script>
+  <script src="lib/stellar/stellar.min.js"></script>
+  <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="lib/counterup/counterup.min.js"></script>
+  <script src="lib/waypoints/waypoints.min.js"></script>
+  <script src="lib/easing/easing.js"></script>
+  <script src="lib/stickyjs/sticky.js"></script>
+  <script src="lib/parallax/parallax.js"></script>
+  <script src="lib/lockfixed/lockfixed.min.js"></script>
+
+  <!-- Template Specisifc Custom Javascript File -->
+  <script src="js/custom.js"></script>
+
+  <script src="contactform/contactform.js"></script>
+
+</body>
+</html>
