@@ -40,16 +40,689 @@
 
   <!-- Main Stylesheet File -->
   <link href="css/style.css" rel="stylesheet">
+  <link rel="shortcut icon" href="img/logo.png">
+  
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/lib.jquery.json-2.3.min.js"></script>
 
-  <!-- =======================================================
-    Theme Name: Bell
-    Theme URL: https://bootstrapmade.com/bell-free-bootstrap-4-template/
-    Author: BootstrapMade.com
-    Author URL: https://bootstrapmade.com
-  ======================================================= -->
+    <script>
+        var exte;
+       main();
+        /**
+            Esta funcion main(); permite inicializar diferentes funciones necesarias, estas permiten la visualización de diferentes listas.
+        */
+       function main(){
+        verificar();
+        listar_categorias();
+        listar_preguntas_reportadas();
+        listar_usuarios();
+        lista_pregunas_usuario();
+       }
+       
+       /*
+       La funcion verificar, controla un posible ingreso a esta página, verifica si existe un token, caso contrario lo devuelve a la página index.html
+       */
+       function verificar(){
+         if (sessionStorage["token"]==null) {
+              document.location.href= "index.html";
+         }
+       }
+        /*
+        Esta es la función encargada de poder registrar una pregunta, obtiene los valores de las diferentes cajas de texto y select del html, para poder enviar esa informacion al servicio web en formato json y según la respuesta del servicio web mostrara un mensaje de exito o de error, estos mensajes se presentaran al usuario usando el comando alert();
+        Como este metodo en el servicio web necesita ser autentificado es necesario enviar el token como header.
+        */
+        function registrarPregunta(){
+            var pregunta = $("#txtPregunta").val();
+            var cate = $("#txtCategoria").val();
+            //var categSeleccionada = this.options
+            var categoria =[cate];
+
+            var dificultad = $("#txtNivel").val();
+
+            var correcta = $("#txtCorrecta").val();
+            var opcion1 = $("#txtOpcion1").val();
+            var opcion2 = $("#txtOpcion2").val();
+            var opcion3 = $("#txtOpcion3").val();
+            var opcion = [correcta, opcion1, opcion2, opcion3];
+
+            var external = sessionStorage["external"];
+          $.ajax({
+                data: JSON.stringify({"pregunta": pregunta, "dificultad":dificultad, "categoria":categoria,
+                                       "opcion":opcion}),
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/registro/'+external,
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/preguntas/registro/'+external,
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+              alert(data["mensaje"]);
+                 $("#txtPregunta").val("");
+                 $("#txtCorrecta").val("");
+                 $("#txtOpcion1").val(""); 
+                 $("#txtOpcion2").val("");
+                 $("#txtOpcion3").val("");
+
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error p");
+                }
+             });
+            //alert(categoria);
+        }
+
+        /*
+        Esta función, como indica su nombre genera una lista de las preguntas, esta lista esta filtrada por dificultad y categoria por lo que se necesita enviar esos datos en formato json, estos datos los obtenemos de los select.
+        Si la respuesta del servicio web es positiva, generamos la lista en una tabla, en la cual se crea de igual forma un boton por cada pregunta, este boton llamara a un modal el cual se llenara con todos los datos de la pregunta seleccionada; caso contrario presentamos un mensaje de error.
+        Como este metodo en el servicio web necesita ser autentificado es necesario enviar el token como header.
+        */
+        function listarPreg(){
+            var categoria = $("#buscarCategoria").val();
+            var dificultad = $("#buscarNivel").val();
+            $.ajax({
+
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                data: JSON.stringify({"dificultad": dificultad, "categoria":categoria}),
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/listarPreguntas/'+dificultad+'/'+categoria,
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/preguntas/listarPreguntas',
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+                 
+                 var html = "";
+                    $.each(data, function (index, item) {
+                       html += "<tr>";
+                       //html += "<td>" + (index + 1) + "</td>";//contador
+                       html += "<td>" + item["pregunta"] + "</td>";
+                       html += "<td>" + item["nivel"] + "</td>";
+                       html += "<td>" + item["categoria"] + "</td>";
+                       html += "<td><button class='btn2' type='submit' href='#' onclick='editarCajaPreg("+item["id"]+", \""+item["nivel"]+ "\", \""+item["pregunta"] 
+                       +"\", \""+item["categoria"]+ "\"); return false;' data-toggle='modal' data-target='#ModalEdiatPregunta'>Editar</button></td>";
+                       html += "</tr>";
+                    });
+                    $("#tabla_tbody").html(html);
+
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error");
+                }
+             });
+            //alert(categoria);
+        }
+        
+        /*
+        Esta función carga los componentes del modal con toda la informacion que se recibe del boton de la lista de preguntas.
+        Como este metodo en el servicio web necesita ser autentificado es necesario enviar el token como header.
+        
+        @param  string id_preg  id de la pregunta a editar
+        @param  string nivel    nivel original de la pregunta a editar
+        @param  string pregunta  la pregunta en sí
+        @param  string categoria  categoria original de la pregunta a editar
+        */
+        function editarCajaPreg(id_preg, nivel, pregunta, categoria){
+            
+            var id = id_preg;
+            var opciones;
+            var nivel = nivel,
+                pregunta = pregunta,
+                categoria = categoria;
+            $.ajax({
+                data: JSON.stringify({"id": id}),
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/categoria/registroCategoria',
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/preguntas/obtenerPreguntaId',
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+                 opciones =data["opcion"];
+                 //opc = opciones.split(separador);
+                 //alert(opciones[0]);
+              $("#txt_correcta").val(opciones[0]);
+              $("#txt_opcion_1").val(opciones[1]);
+              $("#txt_opcion_2").val(opciones[2]);
+              $("#txt_opcion_3").val(opciones[3]);
+              $("#txt_nivel").val(nivel);
+              $("#txt_pregunta").val(pregunta);
+              $("#txt_categoria").val(categoria);
+              $("#txt_id").val(id)
+              
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error p");
+                }
+             });
+        }
+        
+        /*
+        Permite el registro de una categoria, para lo cual solo se obtiene el valor de la caja de texto en la cual se colocara en nombre de la nueva categoria, esta informacion sera enviada al servicio web en formato json.
+        Como este metodo en el servicio web necesita ser autentificado es necesario enviar el token como header.
+        Dependiendo de la respuesta del servidor se presentara un alert(), ya sea positivo o de error.
+        */
+        function registrarCategoria(){
+          var nombreCateg = $("#txtNombCateg").val();
+          $.ajax({
+                data: JSON.stringify({"nombre": nombreCateg}),
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/categoria/registroCategoria',
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/categoria/registroCategoria',
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+              alert(data["mensaje"]);
+              var nombreCateg = $("#txtNombCateg").val("");
+              //var imagenCateg = $("#txtImagenCateg").val("");
+
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error p");
+                }
+             });
+        }
+        
+        /*
+        Esta función lista todas las categorias, de igual forma obtenemos la referencia a los diferentes select, y asi poder cargarlos con los datos que recibimos del servicio web, asi mismo generemos una tabla en la cual se listan todas las categorias, acompañadas de un boton, este permitira habilitar un modal en el cual se podrá modificar dicha categoria.
+        Como este metodo en el servicio web necesita ser autentificado es necesario enviar el token como header.
+        */
+        function listar_categorias(){
+            var selector1 = document.getElementById("txtCategoria");
+            var selector2 = document.getElementById("buscarCategoria");
+            var selector3 = document.getElementById("txtCategoria_repor");
+            var selector4 = document.getElementById("txtCategoria_editar");
+            var i=0;
+          $.ajax({
+            type:  'GET',
+            headers:{'token':sessionStorage["token"]},
+            //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/listarPreguntas/'+dificultad+'/'+categoria,
+            url:   'https://eduquiz.000webhostapp.com/public/index.php/categoria/listarCategoria',
+            dataType: 'json',
+
+            success: function (data, textStatus, jqXHR) {
+            var html = "";
+                $.each(data, function (index, item) {
+                  html += "<tr>";
+                  html += "<td>" + item["categoria"] + "</td>";
+                  html += "<td><button class='btn2' type='submit' href='#' onclick='editarCaja(\""+item["external_id"]+"\"); return false;' data-toggle='modal' data-target='#ModalEdiatCategoria'>Editar</button></td>";
+                  html += "</tr>";
+                  selector1.options[i]= new Option(item["categoria"],item["categoria"]);
+                  selector2.options[i]= new Option(item["categoria"],item["categoria"]);
+                  selector3.options[i]= new Option(item["categoria"],item["categoria"]);
+                  selector4.options[i]= new Option(item["categoria"],item["categoria"]);
+                  i++;
+                });
+                $("#body_categoria").html(html);
+                
+
+            },error: function(jqXHR, textStatus, errorThrown){
+            alert("error listar categoria");
+            }
+            });
+        }
+        
+        /*
+        Esta función se encarga de recibir el external_id de la categoria, para poder cargar con esta informacion una caja de texto, la cual esta invisible para el usuario.
+        Como este metodo en el servicio web necesita ser autentificado es necesario enviar el token como header.
+        
+        @param string external  external_id de la categoria a editar 
+        */
+        function editarCaja(external){
+            //alert(external);
+            $("#txt_exte_cate").val(external);
+        }
+        
+        /*
+        Esta función rescata toda la informacion de los componentes del modal en diferentes variables, estas seran enviadas al servicio web en formato json para poder editar la categoria.
+        Como este metodo necesita de autentificación se envia el token por el header.
+        Se presentara un mensaje de acuerdo a la respuesta del servicio web.
+        */
+        function editar_categoria(){
+            var nombre = $("#txt_editar_categoria").val();
+            var external= $("#txt_exte_cate").val();
+            //alert(external);
+            $.ajax({
+
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                data: JSON.stringify({"nombre": nombre}),
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/listarPreguntas/'+dificultad+'/'+categoria,
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/categoria/editarCategoria/'+external,
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+                 alert(data["mensaje"]);
+                 listar_categorias();
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error al modificar la categoria");
+                }
+             });
+        }
+        
+        /*
+        Esta funcion realiza una peticion al servicio web, si la respuesta es positiva se generara una tabla con la lista de todas las preguntas que han sido reportadas por algun usuario.
+        Como este metodo necesita de autentificación se envia el token por el header.
+        */
+        function listar_preguntas_reportadas(){
+            $.ajax({
+            type:  'GET',
+            headers:{'token':sessionStorage["token"]},
+            //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/listarPreguntas/'+dificultad+'/'+categoria,
+            url:   'https://eduquiz.000webhostapp.com/public/index.php/reporte/listarReporte',
+            //url:   'https://eduquiz.000webhostapp.com/public/index.php/categoria/listarCategoria',
+            
+            dataType: 'json',
+
+            success: function (data, textStatus, jqXHR) {
+            var html = "";
+                $.each(data, function (index, item) {
+                  html += "<tr>";
+                  //html += "<td>" + (index + 1) + "</td>";//contador
+                  html += "<td>" + item["motivo"] + "</td>";
+                  html += "<td>" + item["usuario"] + "</td>";
+                  html += "<td>" + item["id_pregunta"] + "</td>";
+                  html += "<td>" + item["pregunta"] + "</td>";
+                  html += "<td>" + item["categoria"] + "</td>";
+                  html += "<td>" + item["dificultad"] + "</td>";
+                  html += "<td><button class='btn2' type='submit' href='#' onclick='editarCajaPregRepor("+item["id_pregunta"]+", \""+item["dificultad"]+ "\", \""+item["pregunta"] 
+                       +"\", \""+item["categoria"]+ "\", \""+item["external_id_reporte"]+ "\"); return false;' data-toggle='modal' data-target='#ModalEdiatPreguntaRepor'>Editar</button></td>";
+                  html += "</tr>";;
+                  
+                });
+                $("#body_preg_reportadas").html(html);
+
+            },error: function(jqXHR, textStatus, errorThrown){
+                alert("error listar preguntas reportadas");
+            }
+            });
+        }
+        
+      /*
+      Esta función limpia el sessionStorage, y redirecciona a la página index.html
+      */
+      function cerrarSesion(){
+          sessionStorage.clear();
+          document.location.href= "index.html";
+      }
+      
+        /*
+        Esta función obtiene todos los valores de los componentes del modal cambiar clave, verificando si ambas contraseñas coinciden entre si, es decir, que sean iguales para posterior a eso enviarlos al servicio web en formato json.
+        Como este metodo necesita de autentificación se envia el token por el header.
+        Se presentara un mensaje de acuerdo a la respuesta del servicio web; si es positivo la contraseña de este usuario ya habrá sido cambiada.
+        */
+      function cambiarClave (){
+        var pass1 = $("#txt_pass").val();
+        var pass2 = $("#txt_passVeri").val();
+        var external = sessionStorage["external"];
+
+        if(pass1 === pass2){
+            //alert("son iguales");
+            $.ajax({
+                data: JSON.stringify({"clave": pass1}),
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/registro/'+external,
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/usuario/editar/'+external,
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+              alert(data["mensaje"]);
+                 
+
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error");
+                }
+             });
+        }else {
+          alert("Las contraseñas no son inguales");
+        }
+
+      }
+      
+        /*
+        Esta función realiza una peticion al servicio web, si dicha respuesta es positiva se generar una tabla con la lista de todos los usuarios, junto a estos usuarios se creara un boton diferente para cada tipo de usuario, si el usuario esta activo se creara el boton de baneo y si el usuario esta baneado el boton a crear sera el de activar. Si la respuesta es negativa se mostrara un mensaje de error.
+        Como este metodo necesita de autentificación se envia el token por el header.
+        */
+      function listar_usuarios(){
+            
+            $.ajax({
+
+                type:  'GET',
+                headers:{'token':sessionStorage["token"]},
+                //data: JSON.stringify({"dificultad": dificultad, "categoria":categoria}),
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/listarPreguntas/'+dificultad+'/'+categoria,
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/usuario/listaUsuario',
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+                 var html = "";
+                    $.each(data, function (index, item) {
+                        
+                        if(item["estado"] == 0){
+                             html += "<tr>";
+                       //html += "<td>" + (index + 1) + "</td>";//contador
+                       html += "<td>" + item["nombre"] + "</td>";
+                       html += "<td>" + item["correo"] + "</td>";
+                       html += "<td>" + item["estado"] + "</td>";
+                       html += "<td><button class='btn2' type='submit' href='#' onclick='editarUser(\""+item["external"]+"\",\""+item["estado"]+"\"); return false;'>Activar</button></td>";
+                       html += "</tr>";
+                        }else{
+                             html += "<tr>";
+                       //html += "<td>" + (index + 1) + "</td>";//contador
+                       html += "<td>" + item["nombre"] + "</td>";
+                       html += "<td>" + item["correo"] + "</td>";
+                       html += "<td>" + item["estado"] + "</td>";
+                       html += "<td><button class='btn2' type='submit' href='#' onclick='editarUser(\""+item["external"]+"\",\""+item["estado"]+"\"); return false;'>Banear</button></td>";
+                       html += "</tr>";
+                        }
+                        
+                      
+                    });
+                    $("#body_usuarios").html(html);
+
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error");
+                }
+             });
+            //alert(categoria);
+        }
+        
+        /*
+        Esta función obtendra todos los valores de los diferentes componentes del modal editar pregunta, para poder enviarlos al servicio web en formato json.
+        Si la respuesta del servicio web es positiva al pregunta habra sido modificada, caso contrario se mostrara un mensaje de error.
+        Como este metodo necesita de autentificación se envia el token por el header.
+        */
+        function editar_pregunta(){
+            var id = $("#txt_id").val();
+            var pregunta = $("#txt_pregunta").val();
+            var cate = $("#txtCategoria_editar").val();
+            //var categSeleccionada = this.options
+            var categoria =[cate];
+
+            var dificultad = $("#txtNivel_editar").val();
+
+            var correcta = $("#txt_correcta").val();
+            var opcion1 = $("#txt_opcion_1").val();
+            var opcion2 = $("#txt_opcion_2").val();
+            var opcion3 = $("#txt_opcion_3").val();
+            var opcion = [correcta, opcion1, opcion2, opcion3];
+
+            var external = sessionStorage["external"];
+          $.ajax({
+                data: JSON.stringify({"pregunta": pregunta, "dificultad":dificultad, "categoria":categoria,
+                                       "opcion":opcion, "id":id}),
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/registro/'+external,
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/preguntas/editar',
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+              alert(data["mensaje"]);
+                 $("#txtPregunta").val("");
+                 $("#txtCorrecta").val("");
+                 $("#txtOpcion1").val(""); ////PROBAR y subir
+                 $("#txtOpcion2").val("");
+                 $("#txtOpcion3").val("");
+
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error");
+                }
+             });
+        }
+        
+        /*
+        Esta función realiza una peticion al servicio web, si dicha respuesta es positiva se generar una tabla con la lista de todas las preguntas enviadas por los usuarios, junto a estos usuarios se creara un boton para poder editar dicha pregunta. Si la respuesta es negativa se mostrara un mensaje de error.
+        Como este metodo necesita de autentificación se envia el token por el header.
+        */
+        function lista_pregunas_usuario(){
+          $.ajax({
+
+                type:  'GET',
+                headers:{'token':sessionStorage["token"]},
+                //data: JSON.stringify({"dificultad": dificultad, "categoria":categoria}),
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/listarPreguntas/'+dificultad+'/'+categoria,
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/preguntas/SugueridasAceptar',
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+                 var html = "";
+                    $.each(data, function (index, item) {
+                       html += "<tr>";
+                       //html += "<td>" + (index + 1) + "</td>";//contador
+                       html += "<td>" + item["usuario"] + "</td>";
+                       html += "<td>" + item["pregunta"] + "</td>";
+                       html += "<td>" + item["nivel"] + "</td>";
+                       html += "<td>" + item["categoria"] + "</td>";
+                       html += "<td>" + 0 + "</td>";
+                       html += "<td><button class='btn2' type='submit' href='#' onclick='editarCajaPreg("+item["id_pregunta"]+", \""+item["nivel"]+ "\", \""+item["pregunta"] 
+                       +"\", \""+item["categoria"]+ "\"); return false;' data-toggle='modal' data-target='#ModalEdiatPregunta'>Editar</button></td>";
+                       html += "</tr>";
+                    });
+                    $("#body_preg_usuarios").html(html);
+
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error");
+                }
+             });
+        }
+        
+        /*
+        Esta función se encarga de recibir la informacion de la lista de preguntas reportadas y asi cargar los diferentes componentes del modal editar pregunta reportada.
+        Como este metodo necesita de autentificación se envia el token por el header.
+        
+        @param  string  id_preg  id de la pregunta a editar
+        @param  string  nivel  nivel de la pregunta a editar
+        @param  string  pregunta  la pregunta a editar
+        @param  string  categoria  categoria de la pregunta a editar
+        @param  string  external  external_id de la pregunta a editar
+        */
+        function editarCajaPregRepor(id_preg, nivel, pregunta, categoria, external){ //llena el modal
+            
+            var id = id_preg;
+            var opciones;
+            var nivel = nivel,
+                pregunta = pregunta,
+                categoria = categoria,
+                external = external;
+                
+            $.ajax({
+                data: JSON.stringify({"id": id}),
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/categoria/registroCategoria',
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/preguntas/obtenerPreguntaId',
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+                 opciones =data["opcion"];
+              $("#txt_external_r").val(external);
+              $("#txt_correcta_repor").val(opciones[0]);
+              $("#txt_opcion_1_repor").val(opciones[1]);
+              $("#txt_opcion_2_repor").val(opciones[2]);
+              $("#txt_opcion_3_repor").val(opciones[3]);
+              $("#txt_nivel_repor").val(nivel);
+              $("#txt_pregunta_repor").val(pregunta);
+              $("#txt_categoria_repor").val(categoria);
+              $("#txt_id_repor").val(id);
+              
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error p");
+             }
+             });
+        }
+        
+        /*
+        Esta función obtiene todos los datos de los componentes del modal editar pregunta reportada y asi poder enviarlos al servicio web en formato json.
+        Dependiendo de la respuesta del servicio web, se mostrara un mensaje.
+        Como este metodo necesita de autentificación se envia el token por el header.
+        */
+        function editar_pregunta_reportada(){
+            var id = $("#txt_id_repor").val();
+            var exteral = $("txt_external_repor").val();
+            var pregunta = $("#txt_pregunta_repor").val();
+            var cate = $("#txtCategoria_repor").val();
+            //var categSeleccionada = this.options
+            var categoria =[cate];
+
+            var dificultad = $("#txtNivel_repor").val();
+
+            var correcta = $("#txt_correcta_repor").val();
+            var opcion1 = $("#txt_opcion_1_repor").val();
+            var opcion2 = $("#txt_opcion_2_repor").val();
+            var opcion3 = $("#txt_opcion_3_repor").val();
+            var opcion = [correcta, opcion1, opcion2, opcion3];
+
+            var external = sessionStorage["external"];
+            
+            
+          $.ajax({
+                data: JSON.stringify({"pregunta": pregunta, "dificultad":dificultad, "categoria":categoria,
+                                       "opcion":opcion, "id":id}),
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/registro/'+external,
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/preguntas/editar',
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+              alert("pregunta modificada");
+                 $("#txtPregunta").val("");
+                 $("#txtCorrecta").val("");
+                 $("#txtOpcion1").val(""); ////PROBAR y subir
+                 $("#txtOpcion2").val("");
+                 $("#txtOpcion3").val("");
+                    
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error");
+                }
+             });
+             editar_reporte();
+        }
+        
+        /*
+        Esta función permite obtener el valor de la caja de texto del modal editar reportes y asi enviarlo al servicio web en formato json; esta caja de texto sera invisible para el usuario.
+        Dependiendo de la respuesta del servicio web, se mostrara un mensaje.
+        Como este metodo necesita de autentificación se envia el token por el header.
+        */
+        function editar_reporte(){
+            
+            var external_id = $("#txt_external_r").val();
+            $.ajax({
+               // data: JSON.stringify({"external_id": external}),
+                type:  'GET',
+                headers:{'token':sessionStorage["token"]},
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/registro/'+external,
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/reporte/editarReporte/'+external_id,
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+              alert("reporte modificado");
+              listar_preguntas_reportadas();
+                 
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error al editar la pregunta reportada");
+                }
+             });
+        }
+        
+        /*
+        Esta funcion obtiene el valor de la caja de texto enviardo esa información al servicio web, permitiendo de este manera buscar usuarios por su nombre.
+        Al igual que listar usuarios, si la respuesta es positiva genera un tabla con la lista de usuarios que coincidan con el nombre ingresado y se crea un boton para cada estado del usuario.
+        Baneado se crea un boton activar.
+        Activado se crea un boton banear.
+        Como este metodo necesita de autentificación se envia el token por el header.
+        */
+        function buscarUser(){
+            var text = $("#txtNombUser").val()
+            $.ajax({
+
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                data: JSON.stringify({"buscar": text}),
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/listarPreguntas/'+dificultad+'/'+categoria,
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/usuario/buscarUsuario',
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+                 var html = "";
+                    $.each(data, function (index, item) {
+                        
+                        if(item["estado"] == 0){
+                             html += "<tr>";
+                       //html += "<td>" + (index + 1) + "</td>";//contador
+                       html += "<td>" + item["nombre"] + "</td>";
+                       html += "<td>" + item["correo"] + "</td>";
+                       html += "<td>" + item["estado"] + "</td>";
+                       html += "<td><button class='btn2' type='submit' href='#' onclick='editarUser(\""+item["external"]+"\",\""+item["estado"]+"\"); return false;'>Activar</button></td>";
+                       html += "</tr>";
+                        }else{
+                             html += "<tr>";
+                       //html += "<td>" + (index + 1) + "</td>";//contador
+                       html += "<td>" + item["nombre"] + "</td>";
+                       html += "<td>" + item["correo"] + "</td>";
+                       html += "<td>" + item["estado"] + "</td>";
+                       html += "<td><button class='btn2' type='submit' href='#' onclick='editarUser(\""+item["external"]+"\",\""+item["estado"]+"\"); return false;'>Banear</button></td>";
+                       html += "</tr>";
+                        }
+                    });
+                    $("#body_usuarios").html(html);
+
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error");
+                }
+             });
+        }
+        
+        /*
+        Este metodo permite modificar el estado del usuario, tanto en las lista de usuario como en la lista que se genera al buscat, existen dos botones "banear" y "activar", dependiendo de cual se ejecute el estado del usuario cambiara.
+        Dependiendo de la respuesta del servicio web, se mostrara un mensaje.
+        Como este metodo necesita de autentificación se envia el token por el header.
+        */
+        function editarUser(external, estado){
+            var est = estado;
+            if(estado == 0){
+                est = 1;
+                $.ajax({
+
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                data: JSON.stringify({"estado":est}),
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/listarPreguntas/'+dificultad+'/'+categoria,
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/usuario/EditarEstado/'+external,
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+                 alert("modificado user");
+                 listar_usuarios();
+
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error");
+                }
+             });
+            }else{
+                est=0;
+                $.ajax({
+
+                type:  'POST',
+                headers:{'token':sessionStorage["token"]},
+                data: JSON.stringify({"estado":est}),
+                //url:   'https://eduquiza.azurewebsites.net/public/index.php/preguntas/listarPreguntas/'+dificultad+'/'+categoria,
+                url:   'https://eduquiz.000webhostapp.com/public/index.php/usuario/EditarEstado/'+external,
+                dataType: 'json',
+
+             success: function (data, textStatus, jqXHR) {
+                 alert("modificado user");
+                 listar_usuarios();
+
+             },error: function(jqXHR, textStatus, errorThrown){
+                alert("error");
+                }
+             });
+            }
+            
+        }
+        
+    </script>
 </head>
 
-<body>
+<body onload="main()">
   <!-- Page Content
     ================================================== -->
   <!-- Hero -->
@@ -58,7 +731,7 @@
     <div class="container text-center">
       <div class="row">
         <div class="col-md-12">
-          <a class="hero-brand" href="index.html" title="Home"><img alt="Bell Logo" src="img/logo.png"></a>
+          <a class="hero-brand" href="#" title="Home"><img alt="Bell Logo" src="img/logo.png"></a>
         </div>
       </div>
 
@@ -70,7 +743,7 @@
         <p class="tagline">
           Educando gracias a los juegos y a la Tecnología
         </p>
-        <a class="btn btn-full" href="#about">Inicia esta Aventura</a>
+        <a class="btn btn-full" href="#preguntas">Inicia esta Aventura</a>
       </div>
     </div>
 
@@ -82,7 +755,7 @@
     <div class="container">
 
       <div id="logo" class="pull-left">
-        <a href="index.html"><img src="img/logo-nav.png" alt="" title="" /></a>
+        <a href="#"><img src="img/logo-nav.png" alt="" title="" /></a>
         <!-- Uncomment below if you prefer to use a text image -->
         <!--<h1><a href="#hero">Bell</a></h1>-->
       </div>
@@ -92,46 +765,15 @@
           <li><a href="#preguntas">Preguntas</a></li>
           <li><a href="#features">Categorias</a></li>
           <li><a href="#portfolio">Revisión Preguntas</a></li>
-            <li><a href="#team">Usuarios</a></li>
+          <li><a href="#team">Usuarios</a></li>
+          <li><a href="#" data-toggle='modal' data-target='#ModalEditarClave'>Cambiar Clave</a></li>
+          <li><a href="javascript:;" onclick="cerrarSesion();return false;">Cerrar Sesión</a></li>
         </ul>
       </nav>
       <!-- #nav-menu-container -->
 
-      <nav class="nav-menu pull-right d-none d-lg-inline">
-          <a href="#" data-toggle="modal" data-target="#exampleModal">Login</a><a href="#">Register</a>
-      </nav>
     </div>
-    
-            <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">INICIO DE SESIÓN</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">X</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <table>
-                    <tr>
-                        <td>Usuario:</td>
-                        <td><input type="text" class="form-control" placeholder="Ingrese su Usuario"></td>
-                    </tr>
-                    <tr>
-                        <td>Contraseña:</td>
-                        <td><input type="text" class="form-control" placeholder="Ingrese su Contraseña"></td>
-                    </tr>
-                </table>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn" data-dismiss="modal">Aceptar</button>
-                <button type="button" class="btn">Cancelar</button>
-              </div>
-            </div>
-          </div>
-        </div>
-    
+
   </header>
   <!-- #header -->
 
@@ -139,6 +781,7 @@
 
   <section class="about" id="preguntas">
     <div class="container text-center">
+     <!--<div class="text-center"><button class="btn2" type="submit" href="javascript:;" onclick="cerrarSesion();return false;">Cerrar Sesión</button></div>-->
       <h2>
           ADMINISTRACIÓN DE LAS PREGUNTAS
        </h2>
@@ -148,44 +791,83 @@
                 <table>
                     <tr>
                         <td>Pregunta: </td>
-                        <td><input type="text" class="form-control"></td>
+                        <td><textarea id="txtPregunta" rows="4" cols="30" required></textarea></td>
+                        
                     </tr>
                     <tr>
-                        <td>Nivel: </td>
-                        <td><input type="text" class="form-control"></td>
+                        <td>Dificultad: </td>
+                        <td><select name="txtNivel" id="txtNivel" class="custom-select">
+                            <option value="Facil">Facil</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Dificil">Dificil</option>
+                            <option value="Muy Dificil">Muy Dificil</option>
+                            <option value="Maestro">Maestro</option>
+                        </select></td>
                     </tr>
                     <tr>
-                        <!-- <td><br>Categorias<br><input type="radio">Cate1<br><input type="radio">Cate2<br>
-                        <input type="radio">Cate1<br><input type="radio">Cate2<br><br></td>
-                        <td><br><br><input type="radio">Cate1<br><input type="radio">Cate2<br>
-                        <input type="radio">Cate1<br><input type="radio">Cate2<br><br></td> -->
-                        <td>Categorias: </td>
-                        <td><input type="text" class="form-control"></td>
-                        <td><span class="btn2">+</span></td>
+                        <td>Categoria: </td>
+                        <td><select name="txtCategoria" id="txtCategoria" class="custom-select">
+                            <option value="Deportes">Deportes</option>
+                            <option value="Ciencia">Ciencia</option>
+                            <option value="Geografia">Geografia</option>
+                            <option value="Historia">Historia</option>
+                            <option value="Musica">Musica</option>
+                            <option value="Matematicas">Matematicas</option>
+                            <option value="Astronomia">Astronomia</option>
+                            <option value="Literatura">Literatura</option>
+                        </select></td>
+
                     </tr>
                     <tr>
                         <td>Correcta: </td>
-                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" id="txtCorrecta" class="form-control"></td>
                     </tr>
                     <tr>
                         <td>Opcion 1: </td>
-                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" id="txtOpcion1" class="form-control"></td>
                     </tr>
                     <tr>
                         <td>Opcion 2: </td>
-                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" id="txtOpcion2" class="form-control"></td>
                     </tr>
                     <tr>
                         <td>Opcion 3: </td>
-                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" id="txtOpcion3" class="form-control"></td>
                     </tr>
                 </table>
                 <br>
-                <div class="text-center"><button class="btn" type="submit">INGRESAR</button></div>
+                <div class="text-center"><button class="btn" type="submit" href="javascript:;" onclick="registrarPregunta();return false;">INGRESAR</button></div>
             </div>
             <div class="col-sm-8">
-               <h3>LISTADO DE PREGUNTAS</h3>
-                <table class="table"> 
+              <h4>FILTRAR</h4>
+              <table>
+                  <tr>
+                      <td>Dificultad:</td>
+                      <td><select name="buscarNivel" id="buscarNivel" class="custom-select">
+                            <option value="Facil">Facil</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Dificil">Dificil</option>
+                            <option value="Muy Dificil">Muy Dificil</option>
+                            <option value="Maestro">Maestro</option>
+                        </select></td>
+
+                        <td>Categoria: </td>
+                        <td><select name="buscarCategoria" id="buscarCategoria" class="custom-select">
+                            <option value="Deportes">Deportes</option>
+                            <option value="Ciencia">Ciencia</option>
+                            <option value="Geografia">Geografia</option>
+                            <option value="Historia">Historia</option>
+                            <option value="Musica">Musica</option>
+                            <option value="Matematicas">Matematicas</option>
+                            <option value="Astronomia">Astronomia</option>
+                            <option value="Literatura">Literatura</option>
+                        </select></td>
+                        <td><button class="btn2" type="submit" href="javascript:;" onclick="listarPreg();return false;">BUSCAR</button></td>
+                  </tr>
+              </table>
+
+                <h3>LISTADO DE PREGUNTAS</h3>
+                <table class="table">
                     <thead class="thead-dark">
                         <tr>
                             <th>Pregunta</th>
@@ -194,69 +876,64 @@
                             <th>Editar</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <th>...</th>
-                        <th>...</th>
-                        <th>...</th>
-                        <th><button class="btn2" type="submit">Editar</button></th>
+                    <tbody id="tabla_tbody">
+
                     </tbody>
                 </table>
             </div>
         </div>
-     
+
     </div>
   </section>
   <!-- /About -->
   <!-- Parallax -->
 
- 
+
   <!-- /Parallax -->
   <!-- Features -->
 
   <section class="features" id="features">
     <div class="container text-center">
       <h2>
-          ADMINISTRACIÓN DE LAS PREGUNTAS
+          ADMINISTRACIÓN DE LAS CATEGORIAS
        </h2>
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                <h3>AGREGAR CATEGORIA</h3>
                 <table>
                     <tr>
                         <td>Nonbre: </td>
-                        <td><input type="text"></td>
+                        <td><input type="text" id="txtNombCateg" class="form-control" required></td>
                     </tr>
+                    
                     <tr>
-                        <td>Imagen: </td>
-                        <td><input type="file"></td>
+                      <td><button type="button" href="javascript:;" onclick="registrarCategoria();return false;" name="regCateg" class="btn">Aceptar</button> </td>
                     </tr>
                 </table>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-6">
                <h3>LISTADO DE CATEGORIAS</h3>
-                <table>
-                    <table class="table"> 
+                
+                    <table class="table">
                     <thead class="thead-dark">
                         <tr>
                             <th>Nombre</th>
-                            <th>Imagen</th>
+                            
                             <th>Editar</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <th>...</th>
-                        <th>...</th>
-                        <th><button class="btn2" type="submit">Editar</button></th>
+                    <tbody id="body_categoria">
+
                     </tbody>
                 </table>
-                </table>
+                
             </div>
         </div>
       </div>
   </section>
   <!-- /Features -->
- 
-  
+
+
   <!-- Portfolio -->
 
   <section class="portfolio" id="portfolio">
@@ -264,34 +941,21 @@
       <h2>
           LISTA DE PREGUNTAS ENVIADAS POR USUARIOS
       </h2>
-                <table class="table"> 
+                <table class="table">
                     <thead class="thead-dark">
                         <tr>
                             <th>Usuario</th>
                             <th>Pregunta</th>
                             <th>Nivel</th>
                             <th>Categoria</th>
-                            <th>Correcta</th>
-                            <th>Opcion 1</th>
-                            <th>Opcion 2</th>
-                            <th>Opcion 3</th>
-                            <th>Acpetar</th>
+                            <th>Estado</th>
                             <th>Editar</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <th>...</th>
-                        <th>...</th>
-                        <th>...</th>
-                        <th>...</th>
-                        <th>...</th>
-                        <th>...</th>
-                        <th>...</th>
-                        <th>...</th>
-                        <th><button class="btn2" type="submit">Aceptar</button></th>
-                        <th><button class="btn2" type="submit">Editar</button></th>
+                    <tbody id="body_preg_usuarios">
+
                     </tbody>
-                </table>   
+                </table>
     </div>
   </section>
   <!-- /Portfolio -->
@@ -301,88 +965,56 @@
     <center>
      <div class="container">
       <h2 class="text-center">
-          Conoce a nuestro equipo de Desarrollo
+          Listado de Usuarios
         </h2>
-         <table class="table"> 
-                    <thead class="thead-dark">
+        <h3>Buscar Usuario por nombre <input type="text" class="form-control" id="txtNombUser" onchange="buscarUser();return false;"></h3>
+         <table class="table">
+                    <thead class="thead-dark" >
                         <tr>
                             <th>Usuario</th>
                             <th>Correo</th>
                             <th>Estado</th>
-                            <th>Editar</th>
+                            <th>Acción</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <th>...</th>
-                        <th>...</th>
-                        <th>...</th>
-                        <th><button class="btn2" type="submit">Editar</button></th>
+                    <tbody id="body_usuarios">
+
                     </tbody>
-                </table>   
+                </table>
+    </div>
+    </center>
+  </section>
+  
+  <section class="portfolio">
+    <center>
+     <div class="container">
+      <h2 class="text-center">
+          Listado de Preguntas Reportadas
+        </h2>
+         <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Motivo</th>
+                            <th>Usuario</th>
+                            <th>Id</th>
+                            
+                            <th>Pregunta</th>
+                            <th>Categoria</th>
+                            <th>Dificultad</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body_preg_reportadas">
+
+                    </tbody>
+          </table>
     </div>
     </center>
   </section>
   <!-- /Team -->
   <!-- @component: footer -->
 
-  <section id="contact">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12 text-center">
-          <h2 class="section-title">Contactanos</h2>
-        </div>
-      </div>
-
-      <div class="row justify-content-center">
-        <div class="col-lg-3 col-md-4">
-          <div class="info">
-            <div>
-              <i class="fa fa-map-marker"></i>
-              <p>Calle Catacocha<br>Loja, Ecuador</p>
-            </div>
-
-            <div>
-              <i class="fa fa-envelope"></i>
-              <p>eduquiz@gmail.com</p>
-            </div>
-
-            <div>
-              <i class="fa fa-phone"></i>
-              <p>+593 0970308263</p>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="col-lg-5 col-md-8">
-          <div class="form">
-            <div id="sendmessage">Your message has been sent. Thank you!</div>
-            <div id="errormessage"></div>
-            <form action="" method="post" role="form" class="contactForm">
-              <div class="form-group">
-                <input type="text" name="name" class="form-control" id="name" placeholder="Tu Nombre" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
-                <div class="validation"></div>
-              </div>
-              <div class="form-group">
-                <input type="email" class="form-control" name="email" id="email" placeholder="Tu Correo" data-rule="email" data-msg="Please enter a valid email" />
-                <div class="validation"></div>
-              </div>
-              <div class="form-group">
-                <input type="text" class="form-control" name="subject" id="subject" placeholder="Cabecera" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
-                <div class="validation"></div>
-              </div>
-              <div class="form-group">
-                <textarea class="form-control" name="Mensaje" rows="5" data-rule="required" data-msg="Porfavor escribe tus sugerencias" placeholder="Message"></textarea>
-                <div class="validation"></div>
-              </div>
-              <div class="text-center"><button type="submit">Send Message</button></div>
-            </form>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
+  
 
   <footer class="site-footer">
     <div class="bottom">
@@ -394,7 +1026,8 @@
               © EduQuiz
             </p>
             <div class="credits">
-             Designed by Ricardo Esparza
+             Designed by Ricardo Esparza <br>
+             eduquiz@gmail.com
             </div>
           </div>
 
@@ -420,9 +1053,7 @@
                 <a href="#team">Equipo</a>
               </li>
 
-              <li class="list-inline-item">
-                <a href="#contact">Contactanos</a>
-              </li>
+              
             </ul>
           </div>
 
@@ -430,6 +1061,214 @@
       </div>
     </div>
   </footer>
+  
+  <!-- Modal editar categoria-->
+        <div class="modal fade" id="ModalEdiatCategoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">EDITAR CATEGORIA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" href="javascript:;" onclick="cancelar();return false;">X</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <table>
+                    <tr>
+                        <td>Nuevo Nombre:</td>
+                        <td><input type="text"  id ="txt_editar_categoria" class="form-control" placeholder="Ingrese el nuevo nombre"></td>
+                        <td><input type="text" id="txt_exte_cate"  style="display:none"></td>
+                    </tr>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal" href="javascript:;" onclick="editar_categoria();return false;">Aceptar</button>
+                <button type="button" class="btn" data-dismiss="modal" aria-label="Close" href="javascript:;" onclick="cancelar();return false;">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Modal editar pregunta-->
+        <div class="modal fade" id="ModalEdiatPregunta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">EDITAR PREGUNTA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" href="javascript:;" onclick="cancelar();return false;">X</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <table>
+                    <tr>
+                        <td>Pregunta</td>
+                        <td><textarea id="txt_pregunta" rows="4" cols="25"></textarea></td>
+                        
+                    </tr>
+                    <tr>
+                    <td>Dificultad: </td>
+                        <td><select name="txtNivel" id="txtNivel_editar" class="custom-select">
+                            <option value="Facil">Facil</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Dificil">Dificil</option>
+                            <option value="Muy Dificil">Muy Dificil</option>
+                            <option value="Maestro">Maestro</option>
+                        </select></td>
+                        <td><input type="text"  id ="txt_nivel" class="form-control" disabled></td>
+                    </tr>
+                    <tr>
+                        <td>Categoria: </td>
+                        <td><select name="txtCategoria" id="txtCategoria_editar" class="custom-select">
+                            <option value="Deportes">Deportes</option>
+                            <option value="Ciencia">Ciencia</option>
+                            <option value="Geografia">Geografia</option>
+                            <option value="Historia">Historia</option>
+                            <option value="Musica">Musica</option>
+                            <option value="Matematicas">Matematicas</option>
+                            <option value="Astronomia">Astronomia</option>
+                            <option value="Literatura">Literatura</option>
+                        </select></td>
+                        <td><input type="text"  id ="txt_categoria" class="form-control" disabled></td>
+                    </tr>
+                    <tr>
+                        <td>Nueva Respuesta Correcta:</td>
+                        <td><input type="text"  id ="txt_correcta" class="form-control" placeholder="Respuesta Correcta"></td>
+                    </tr>
+                    <tr>
+                        <td>Nueva Opcion:</td>
+                        <td><input type="text"  id ="txt_opcion_1" class="form-control" placeholder="Nueva Opcion"></td>
+                    </tr>
+                    <tr>
+                        <td>Nueva Opcion:</td>
+                        <td><input type="text"  id ="txt_opcion_2" class="form-control" placeholder="Nueva Opcion"></td>
+                    </tr>
+                    <tr>
+                        <td>Nueva Opcion:</td>
+                        <td><input type="text"  id ="txt_opcion_3" class="form-control" placeholder="Nueva Opcion"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text"  id ="txt_id" class="form-control" disabled style="display:none"></td>
+                    </tr>
+                    
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal" href="javascript:;" onclick="editar_pregunta();return false;">Aceptar</button>
+                <button type="button" class="btn" data-dismiss="modal" aria-label="Close" href="javascript:;" onclick="cancelar();return false;">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Modal editar pregunta reportada-->
+        <div class="modal fade" id="ModalEdiatPreguntaRepor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">EDITAR PREGUNTA REPORTADA</h5>
+                <input type = "text" id="txt_external_r" style="display: none;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" href="javascript:;" onclick="cancelar();return false;">X</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  
+                <table>
+                    <tr>
+                        <td>Pregunta</td>
+                        <td><textarea id="txt_pregunta_repor" rows="4" cols="25"></textarea></td>
+                        
+                    </tr>
+                    <tr>
+                    <td>Dificultad: </td>
+                        <td><select name="txtNivel" id="txtNivel_repor" class="custom-select">
+                            <option value="Facil">Facil</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Dificil">Dificil</option>
+                            <option value="Muy Dificil">Muy Dificil</option>
+                            <option value="Maestro">Maestro</option>
+                        </select></td>
+                        <td><input type="text"  id ="txt_nivel_repor" class="form-control" disabled></td>
+                    </tr>
+                    <tr>
+                        <td>Categoria: </td>
+                        <td><select name="txtCategoria" id="txtCategoria_repor" class="custom-select">
+                            <option value="Deportes">Deportes</option>
+                            <option value="Ciencia">Ciencia</option>
+                            <option value="Geografia">Geografia</option>
+                            <option value="Historia">Historia</option>
+                            <option value="Musica">Musica</option>
+                            <option value="Matematicas">Matematicas</option>
+                            <option value="Astronomia">Astronomia</option>
+                            <option value="Literatura">Literatura</option>
+                        </select></td>
+                        <td><input type="text"  id ="txt_categoria_repor" class="form-control" disabled></td>
+                    </tr>
+                    <tr>
+                        <td>Nueva Respuesta Correcta:</td>
+                        <td><input type="text"  id ="txt_correcta_repor" class="form-control" placeholder="Respuesta Correcta"></td>
+                    </tr>
+                    <tr>
+                        <td>Nueva Opcion:</td>
+                        <td><input type="text"  id ="txt_opcion_1_repor" class="form-control" placeholder="Nueva Opcion"></td>
+                    </tr>
+                    <tr>
+                        <td>Nueva Opcion:</td>
+                        <td><input type="text"  id ="txt_opcion_2_repor" class="form-control" placeholder="Nueva Opcion"></td>
+                    </tr>
+                    <tr>
+                        <td>Nueva Opcion:</td>
+                        <td><input type="text"  id ="txt_opcion_3_repor" class="form-control" placeholder="Nueva Opcion"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text"  id ="txt_id_repor" class="form-control" disabled style="display:none"></td>
+                    </tr>
+                   
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal" href="javascript:;" onclick="editar_pregunta_reportada();return false;">Aceptar</button>
+                <button type="button" class="btn" data-dismiss="modal" aria-label="Close" href="javascript:;" onclick="cancelar();return false;">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+        
+        <!-- Modal editar clave-->
+        <div class="modal fade" id="ModalEditarClave" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">EDITAR CLAVE</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" href="javascript:;" onclick="cancelar();return false;">X</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <table>
+                    <tr>
+                        <td>Nueva Clave:</td>
+                        <td><input type="password"  id ="txt_pass" class="form-control" placeholder="Ingrese su clave"></td>
+                    </tr>
+                    <tr>
+                        <td>Repita la Clave:</td>
+                        <td><input type="password"  id ="txt_passVeri" class="form-control" placeholder="Repita su clave"></td>
+                    </tr>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal" href="javascript:;" onclick="cambiarClave();return false;">Aceptar</button>
+                <button type="button" class="btn" data-dismiss="modal" aria-label="Close" href="javascript:;" onclick="cancelar();return false;">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+        
   <a class="scrolltop" href="#"><span class="fa fa-angle-up"></span></a>
 
 
