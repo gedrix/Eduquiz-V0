@@ -53,20 +53,28 @@
         */
        function main(){
         verificar();
-        listar_categorias();
-        listar_preguntas_reportadas();
-        listar_usuarios();
-        lista_pregunas_usuario();
+       
        }
        
        /*
        La funcion verificar, controla un posible ingreso a esta página, verifica si existe un token, caso contrario lo devuelve a la página index.html
        */
        function verificar(){
-         if (sessionStorage["token"]==null) {
-              document.location.href= "index.html";
+         if (sessionStorage["token"] != null) {
+             if(sessionStorage["rol"] != 0){
+              document.location.href= "usuario.html";   
+             }else{
+                    listar_categorias();
+                    listar_preguntas_reportadas();
+                    listar_usuarios();
+                    lista_pregunas_usuario();
+             }
+              
+         }else{
+             document.location.href= "index.html";
          }
        }
+        
         /*
         Esta es la función encargada de poder registrar una pregunta, obtiene los valores de las diferentes cajas de texto y select del html, para poder enviar esa informacion al servicio web en formato json y según la respuesta del servicio web mostrara un mensaje de exito o de error, estos mensajes se presentaran al usuario usando el comando alert();
         Como este metodo en el servicio web necesita ser autentificado es necesario enviar el token como header.
