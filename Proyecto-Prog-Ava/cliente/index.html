@@ -42,25 +42,21 @@
   <script type="text/javascript" src="js/lib.jquery.json-2.3.min.js"></script>
   <!--registrar usuario-->
   <script>
-    /*
-    Esta función obtiene todos la infomacion contenida en los diferentes componentes del modal registar para poder enviarlo al servicio web en formato json.
-    Esta funcion realiza varias validaciones como que los campos esten llenos, que ambas claves coincidad y sobretodo que el email a ingresar tenga el formato adecuado.
-    Este metodo en el servicio web no necesita autentificación.
-    Dependiendo de la respuesta del servicio web se presentara un mensaje.
-    */
     function registrar()
     {
-      var emailRegex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i,
+      //alert("hola");
+      var patron=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/,
           nombre = document.getElementById("usuarioLabel2").value,
           correo = document.getElementById("correoLabel").value,
           clave = document.getElementById("claveLabel2").value,
           clave2 = document.getElementById("vclaveLabel").value;
+          //alert(nombre+" "+correo+" "+clave);
           if(nombre=="" || correo=="" || clave=="" || clave2==""){
               alert("Se deben ingresar todos los campos");
           }else{
           if (clave == clave2)
             {
-                if(emailRegex.test(correo.value)){
+                if(correo.search(patron)==0){
                     //alert(usuario+" "+correo);
                     $.ajax({
                         type:  'POST',
@@ -84,20 +80,17 @@
         }
     }
   </script>
-  
+  <!--logear-->
   <script>
+  
   verSiLogin();
-  /*
-    Esta función obtiene todos la infomacion contenida en los diferentes componentes del modal iniciar sesión para poder enviarlo al servicio web en formato json.
-    Este metodo en el servicio web no necesita autentificación.
-    Dependiendo de la respuesta del servicio web se presentara un mensaje; si la respuesta es satisfactoria se creara un token y se almacenaran diferentes sessionStorage para el token, nombre y external_id; estos nos serviran para poder autentificar a este usuario logueado.
-  */
+  
   function login(){
     var correo = $("#usuarioLabel").val();
     var clave = $("#claveLabel").val();
-    //var emailRegex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+    var patron=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/;
     if (correo != '' && clave != ''){
-        //if(emailRegex.test(correo.value)){
+        if(correo.search(patron)==0){
             var datos = JSON.stringify({"correo": correo, "clave":clave});
             $.ajax({
               data: datos,
@@ -129,35 +122,28 @@
                     }
 
             });
-        //}else{
-            //alert("Ingrese una dirección de correo valida");
-        //}
+        }else{
+            alert("Ingrese una dirección de correo valida");
+        }
         
     }else{
         alert("Ingrese los campos solicitados");
     }
   }
 
-  /*
-  Este metodo verifica si hay una sesion inicializada, esto lo realiza por medio del sesionStorage del token, que si existe indicara que se ha iniciado sesión, por ende se redirigira a la página del usuario.
-  */
   function verSiLogin(){
-      if (sessionStorage["token"]) {
-        document.location.href ="usuario.html";
+      if (sessionStorage["token"] != null) {
+       if(sessionStorage["rol"] == 0){
+            document.location.href ="administrador.html";
+       }
       }
-     }
-      
-      /*
-      Esta función limpia los componentes del modal iniciar sesión.
-      */
+    }
+
      function cancelar(){
        $("#usuarioLabel").val("");
        $("#claveLabel").val("");
      }
-      
-      /*
-      Esta función limpia los componentes del modal registrar.
-      */
+
      function cancelarRegistrar(){
        $("#usuarioLabel2").val(""),
        $("#correoLabel").val(""),
@@ -187,8 +173,8 @@
           Educando gracias a los juegos y a la Tecnología
         </p>
         <a class="btn btn-full" href="#about">Inicia esta Aventura</a>
-        &nbsp &nbsp
-        <a class="btn btn-full" href="descargas/app/EDUquiz.apk">Descarga nuestra APK</a>
+        <br><br>
+        <a class="btn btn-full" href="https://drive.google.com/open?id=1hDmajQRTVMb1yfv7Qg4ADThdmJLNLNkn">Descarga nuestra APK</a>
       </div>
     </div>
 
@@ -206,7 +192,7 @@
       </div>
 
       <nav id="nav-menu-container">
-        <ul class="nav-menu">
+        <ul class="nav-menu" id="lista_menu">
           <li><a href="#about">Sobre Nosotros</a></li>
           <li><a href="#features">Descripcion</a></li>
           <li><a href="#portfolio">Categorias</a></li>
@@ -476,7 +462,7 @@
               <div class="modal-body">
                 <table>
                     <tr>
-                        <td>Usuario:</td>
+                        <td>Correo:</td>
                         <td><input type="email"  id ="usuarioLabel" class="form-control" placeholder="Ingrese su Usuario" required></td>
                     </tr>
                     <tr>
