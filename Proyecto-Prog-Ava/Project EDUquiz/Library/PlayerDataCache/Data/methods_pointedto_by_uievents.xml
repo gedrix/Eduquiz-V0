@@ -10,31 +10,52 @@
 		</type>
 		<type fullname="GameController">
 			<method name="btnIrAlMenu"/>
+			<method name="btnCancelarRP"/>
+			<method name="btnIrAlMenu"/>
 			<method name="btnIrAlMenu"/>
 			<method name="btnCancelarCS"/>
-			<method name="btnIrAlMenu"/>
+			<method name="btnLogros"/>
 			<method name="btnOpciones"/>
 			<method name="btnJugar"/>
+			<method name="btnHabilitarRP"/>
 			<method name="btnIrAlMenu"/>
 			<method name="btnSalirCS"/>
 			<method name="btnHomeIAM"/>
+			<method name="btnEnviarRP"/>
 			<method name="btnOpcion2"/>
 			<method name="btnVerPregunta"/>
 			<method name="btnContinuar"/>
+			<method name="btnAbrirPanelElegirImagen"/>
 			<method name="btnCancelarIAM"/>
-			<method name="editarNombre"/>
+			<method name="btnEditarUsuario"/>
+			<method name="btnIrAlMenu"/>
+			<method name="btnCerrarPanelElegirImagen"/>
 			<method name="btnOpcion1"/>
 			<method name="btnJugar"/>
 			<method name="activarInputNombre"/>
+			<method name="btnImagenSeleccion"/>
+			<method name="btnImagenSeleccion"/>
+			<method name="btnImagenSeleccion"/>
 			<method name="btnCerrarSesion"/>
+			<method name="btnInformacion"/>
+			<method name="btnImagenSeleccion"/>
+			<method name="btnImagenSeleccion"/>
 			<method name="btnClasificacion"/>
 			<method name="btnCrearPregunta"/>
 			<method name="btnOpcion4"/>
 			<method name="btnSugerirPregunta"/>
 			<method name="btnIrAlMenu"/>
 			<method name="btnContinuar"/>
+			<method name="btnImagenSeleccion"/>
 			<method name="btnOpcion3"/>
 			<method name="btnRegresarSugerir"/>
+		</type>
+		<type fullname="InfoController">
+			<method name="btnRegresarMenu"/>
+			<method name="btnIrPaginaWeb"/>
+		</type>
+		<type fullname="LogrosController">
+			<method name="btnRegresarMenu"/>
 		</type>
 	</assembly>
 </linker>

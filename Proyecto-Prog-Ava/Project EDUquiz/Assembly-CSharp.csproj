@@ -51,11 +51,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Controlador\ChangeImage.cs" />
      <Compile Include="Assets\Scripts\Controlador\ControlClasificacion.cs" />
      <Compile Include="Assets\Scripts\Controlador\ControlItemClasificacion.cs" />
+     <Compile Include="Assets\Scripts\Controlador\ControlItemLogro.cs" />
      <Compile Include="Assets\Scripts\Controlador\ControlNiveles.cs" />
      <Compile Include="Assets\Scripts\Controlador\GameController.cs" />
+     <Compile Include="Assets\Scripts\Controlador\InfoController.cs" />
+     <Compile Include="Assets\Scripts\Controlador\LogrosController.cs" />
      <Compile Include="Assets\Scripts\Controlador\SesionController.cs" />
+     <Compile Include="Assets\Scripts\Modelo\Logros.cs" />
      <Compile Include="Assets\Scripts\Modelo\Persona.cs" />
      <Compile Include="Assets\Scripts\Modelo\Personas.cs" />
      <Compile Include="Assets\Scripts\Modelo\Pregunta.cs" />

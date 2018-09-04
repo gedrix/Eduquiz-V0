@@ -1,6 +1,12 @@
 <linker>
 <assembly fullname="Assembly-CSharp">
+<type fullname="ChangeImage" preserve="all"/>
+<type fullname="ControlClasificacion" preserve="all"/>
+<type fullname="ControlItemClasificacion" preserve="all"/>
+<type fullname="ControlItemLogro" preserve="all"/>
 <type fullname="GameController" preserve="all"/>
+<type fullname="InfoController" preserve="all"/>
+<type fullname="LogrosController" preserve="all"/>
 <type fullname="SesionController" preserve="all"/>
 <type fullname="TMPro.Examples.Benchmark01" preserve="all"/>
 <type fullname="TMPro.Examples.Benchmark01_UGUI" preserve="all"/>

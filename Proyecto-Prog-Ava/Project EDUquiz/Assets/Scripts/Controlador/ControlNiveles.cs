@@ -1,13 +1,27 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Esta clase no es necesaria verla en el editor 'Unity' y por eso no hereda de <MonoBehaviour>
+/// </summary>
 public class ControlNiveles {
 	private int expMax = 80, expAnt = 0, expIncremento = 10; //exp limite, exp anterior, lo que se incrementara al sig nivel
 	private int nivel = 0; //0 por defecto
 	private int porcentaje = 0; //porcentaje de la experiencia actual para llegar al sig nivel...
 	private int pDificil = 0, pNormal = 0, pFacil = 0;
 
-	//devuelve [Nivel, Porcentaje, EXP maxima]
+	/// <summary>
+	/// Este metodo se encarga de determinar el nivel actual del usuario atraves de la experiencia
+	/// obtenida, esto para evitar tener un campo 'nivel' en la BD que podria ser obviamente derivado
+	/// de la experiencia.
+	/// </summary>
+	/// <param name="experiencia">
+	/// Este parametro es utilizado practicamente para determinar el nivel actual en que el usuario
+	/// se encuentra, su porcentaje y la experiencia maxima calculada.
+	/// </param>
+	/// <returns>
+	/// Devuelve [Nivel, Porcentaje, EXP maxima]
+	/// </returns>
 	public int[] obtenerNivelUsuario (int experiencia) {
 		//reinicia los valores por defecto...
 		expMax = 80;
@@ -26,7 +40,6 @@ public class ControlNiveles {
 				break;
 			}
 		}
-
 		//calcular porcentaje de la experiencia actual
 		experiencia = experiencia - expAnt;
 		expMax = expMax - expAnt;
@@ -34,7 +47,24 @@ public class ControlNiveles {
 		int[] infoNivel = new int[3] { nivel, porcentaje, expMax };
 		return infoNivel;
 	}
-	//devuelve [puntos experiencia, puntos(clasificacion)]
+
+	/// <summary>
+	/// Este metodo es la manera en que se decidio manejar los puntos obtenidos, de acuerdo
+	/// al nivel y la dificultad de la pregunta, en resumen la manera de calcular los puntos es la
+	/// siguiente:
+	/// -- Los puntos de experiencia tienen un puntaje por defecto de 10 (siendo este el maximo)
+	///    y su valor se vera reducido de acuerdo al nivel y la dificultad de la pregunta
+	/// -- Los puntos de clasificacion tienen un puntaje por defecto de 1; el jugador debera tener
+	///    un determinado numero de aciertos (acumulable) para que pueda obtener este punto, sin
+	///    embargo mientras mayor sea la dificultad de la pregunta (y sea respondida correctamente)
+	///    menos aciertos requerira para obtener el punto de clasificacion.
+	/// </summary>
+	/// <param name="nivel">Se recibe el nivel actual del jugador</param>
+	/// <param name="dificultad">Se recibe la dificultad de las preguntas a las que tiene acceso
+	/// </param>
+	/// <returns>
+	/// Devuelve [puntos experiencia, puntos(clasificacion)]
+	/// </returns>
 	public int[] obtenerPuntosPorDificultad (int nivel, string dificultad) {
 		int[] infoPuntaje = new int[2] { 10, 1 }; //por defecto [10 puntos de experiencia, 1 punto (clasificacion)]
 
@@ -111,7 +141,6 @@ public class ControlNiveles {
 				infoPuntaje[1] = 1; //punto (clasificacion)
 				return infoPuntaje;
 		}
-
 		return infoPuntaje;
 	}
 }
